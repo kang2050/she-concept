@@ -7,113 +7,124 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#060a14;--nav:#0a0e1a;--card:#0f172a;--border:rgba(255,255,255,.06);--pink:#f472b6;--purple:#818cf8;--green:#34d399;--text:#e2e8f0;--muted:#94a3b8}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif}
 
-/* Top Bar */
-.topbar{display:flex;align-items:center;height:52px;padding:0 24px;background:var(--nav);border-bottom:1px solid var(--border);flex-shrink:0;gap:8px;position:relative;z-index:10}
-.brand{font-size:1rem;font-weight:700;background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:24px;white-space:nowrap;letter-spacing:.5px}
+/* Sticky Nav */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;height:48px;padding:0 20px;background:rgba(6,10,20,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);gap:6px}
+.brand{font-size:.95rem;font-weight:700;background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:16px;white-space:nowrap}
+.nav-links{display:flex;gap:2px;flex:1;overflow-x:auto}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{padding:0 14px;height:48px;display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted);text-decoration:none;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--pink);border-bottom-color:var(--pink)}
+.nav-links a .icon{font-size:1rem}
 
-/* Tabs */
-.tabs{display:flex;gap:2px;flex:1;overflow-x:auto}
-.tab{padding:0 20px;height:52px;display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;user-select:none}
-.tab:hover{color:var(--text);background:rgba(255,255,255,.02)}
-.tab.active{color:var(--pink);border-bottom-color:var(--pink);background:rgba(244,114,182,.04)}
-.tab .icon{font-size:1.1rem}
-.tab .badge{font-size:.65rem;padding:1px 6px;border-radius:4px;background:rgba(244,114,182,.12);color:var(--pink);font-weight:600}
+/* Section wrapper */
+.section-block{position:relative;border-bottom:1px solid var(--border)}
+.section-label{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:10px;padding:12px 24px;background:linear-gradient(180deg,rgba(6,10,20,.95) 60%,transparent);pointer-events:none}
+.section-label .tag{padding:3px 12px;border-radius:6px;font-size:.75rem;font-weight:600}
+.section-label .tag.pink{background:rgba(244,114,182,.12);color:var(--pink)}
+.section-label .tag.purple{background:rgba(129,140,248,.12);color:var(--purple)}
+.section-label .tag.green{background:rgba(52,211,153,.12);color:var(--green)}
+.section-label .tag.gold{background:rgba(251,191,36,.12);color:#fbbf24}
+.section-label h2{font-size:.95rem;font-weight:600;color:var(--text)}
 
-/* Port info */
-.port-info{font-size:.75rem;color:var(--muted);margin-left:auto;white-space:nowrap;display:flex;align-items:center;gap:6px}
-.port-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* iframes — each section scrollable within */
+.section-block iframe{width:100%;border:none;display:block}
 
-/* Content */
-.content{flex:1;position:relative;overflow:hidden}
-.page{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s}
-.page.active{opacity:1;pointer-events:auto}
-.page iframe{width:100%;height:100%;border:none}
+/* Back to top */
+.btt{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--pink);color:#fff;border:none;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;z-index:99;box-shadow:0 4px 16px rgba(244,114,182,.3)}
+.btt.show{opacity:1}
+.btt:hover{transform:scale(1.1)}
 
-/* Responsive */
 @media(max-width:768px){
-  .brand{font-size:.85rem;margin-right:12px}
-  .tab{padding:0 12px;font-size:.78rem}
-  .tab .badge,.port-info{display:none}
+  .brand{display:none}
+  .nav-links a{padding:0 10px;font-size:.75rem}
+  .section-label{padding:8px 16px}
+  .section-label h2{font-size:.85rem}
 }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="brand">她概念 She Concept</div>
-  <div class="tabs">
-    <div class="tab active" data-page="overview">
-      <span class="icon">🏠</span>
-      <span>战略门户</span>
-      <span class="badge">总览</span>
-    </div>
-    <div class="tab" data-page="ppt">
-      <span class="icon">📊</span>
-      <span>演示 PPT</span>
-      <span class="badge">15页</span>
-    </div>
-    <div class="tab" data-page="finance">
-      <span class="icon">📈</span>
-      <span>财务模型</span>
-      <span class="badge">可编辑</span>
-    </div>
-    <div class="tab" data-page="charts">
-      <span class="icon">📉</span>
-      <span>可视化报告</span>
-      <span class="badge">11图表</span>
-    </div>
+<nav>
+  <div class="brand">她概念</div>
+  <div class="nav-links">
+    <a href="#s-portal" class="active"><span class="icon">🏠</span> 战略门户</a>
+    <a href="#s-slides"><span class="icon">📊</span> 演示PPT</a>
+    <a href="#s-finance"><span class="icon">📈</span> 财务模型</a>
+    <a href="#s-charts"><span class="icon">📉</span> 可视化报告</a>
   </div>
-  <div class="port-info">
-    <span class="port-dot"></span>
-    she-concept
+</nav>
+
+<!-- Section 1: Portal -->
+<div class="section-block" id="s-portal">
+  <div class="section-label">
+    <span class="tag pink">01</span>
+    <h2>战略门户 — 全部研究数据总览</h2>
   </div>
+  <iframe src="portal.html" style="height:8400px"></iframe>
 </div>
 
-<div class="content">
-  <div class="page active" id="page-overview">
-    <iframe src="portal.html" loading="eager"></iframe>
+<!-- Section 2: Slides -->
+<div class="section-block" id="s-slides">
+  <div class="section-label">
+    <span class="tag purple">02</span>
+    <h2>演示 PPT — 15 页全屏幻灯片（键盘←→翻页）</h2>
   </div>
-  <div class="page" id="page-ppt">
-    <iframe src="slides.html" loading="lazy"></iframe>
-  </div>
-  <div class="page" id="page-finance">
-    <iframe src="finance.html" loading="lazy"></iframe>
-  </div>
-  <div class="page" id="page-charts">
-    <iframe src="charts.html" loading="lazy"></iframe>
-  </div>
+  <iframe src="slides.html" style="height:100vh"></iframe>
 </div>
+
+<!-- Section 3: Finance -->
+<div class="section-block" id="s-finance">
+  <div class="section-label">
+    <span class="tag green">03</span>
+    <h2>财务模型 — 可编辑，自动计算联动</h2>
+  </div>
+  <iframe src="finance.html" style="height:4200px"></iframe>
+</div>
+
+<!-- Section 4: Charts -->
+<div class="section-block" id="s-charts">
+  <div class="section-label">
+    <span class="tag gold">04</span>
+    <h2>可视化报告 — 11 个 Chart.js 交互图表</h2>
+  </div>
+  <iframe src="charts.html" style="height:5600px"></iframe>
+</div>
+
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-const tabs = document.querySelectorAll('.tab');
-const pages = document.querySelectorAll('.page');
+// Scrollspy: highlight active nav link
+const links = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('.section-block');
+const btt = document.getElementById('btt');
 
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.dataset.page;
-
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-
-    pages.forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + target).classList.add('active');
-
-    // Focus iframe for keyboard events (PPT needs this)
-    const iframe = document.getElementById('page-' + target).querySelector('iframe');
-    if (iframe) setTimeout(() => iframe.focus(), 100);
+function onScroll() {
+  const y = window.scrollY + 80;
+  let current = '';
+  sections.forEach(s => {
+    if (s.offsetTop <= y) current = s.id;
   });
-});
+  links.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+  btt.classList.toggle('show', window.scrollY > 600);
+}
 
-// Keyboard shortcut: 1-4 switch tabs
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  const num = parseInt(e.key);
-  if (num >= 1 && num <= 4) {
-    tabs[num - 1].click();
-  }
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+// Auto-resize iframes to fit content (fallback if cross-origin allows)
+document.querySelectorAll('iframe').forEach(f => {
+  f.addEventListener('load', () => {
+    try {
+      const h = f.contentDocument.documentElement.scrollHeight;
+      if (h > 100) f.style.height = h + 'px';
+    } catch(e) { /* cross-origin, use preset height */ }
+  });
 });
 </script>
 </body>
