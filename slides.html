@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>她概念 She Concept — 品牌战略部署报告</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f172a;
+    --coral: #f472b6;
+    --purple: #818cf8;
+    --white: #ffffff;
+    --card-bg: rgba(255,255,255,0.06);
+    --card-border: rgba(255,255,255,0.10);
+    --text-secondary: rgba(255,255,255,0.65);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ---- slide container ---- */
+  #deck {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 100px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.55s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---- page number ---- */
+  #page-num {
+    position: fixed;
+    bottom: 32px;
+    right: 48px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    z-index: 100;
+    letter-spacing: 1px;
+  }
+
+  /* ---- navigation hint ---- */
+  #nav-hint {
+    position: fixed;
+    bottom: 32px;
+    left: 48px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+    z-index: 100;
+  }
+
+  /* ---- progress bar ---- */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--coral), var(--purple));
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* ---- typography ---- */
+  .slide-title {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 48px;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .slide-title .coral { color: var(--coral); }
+  .slide-title .purple { color: var(--purple); }
+
+  .subtitle {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .big-number {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--coral);
+    line-height: 1.1;
+  }
+
+  .highlight { color: var(--coral); font-weight: 700; }
+  .purple-hl { color: var(--purple); font-weight: 700; }
+
+  /* ---- cards ---- */
+  .card-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 1400px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    flex: 1 1 280px;
+    max-width: 340px;
+    backdrop-filter: blur(8px);
+  }
+  .card h3 {
+    font-size: 18px;
+    margin-bottom: 14px;
+    color: var(--coral);
+    font-weight: 600;
+  }
+  .card p, .card li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.8);
+  }
+  .card ul { padding-left: 18px; }
+  .card .card-number {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--coral);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .card .card-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .card-wide {
+    max-width: 480px;
+    flex: 1 1 420px;
+  }
+
+  /* ---- lists ---- */
+  .info-list {
+    list-style: none;
+    max-width: 900px;
+    width: 100%;
+  }
+  .info-list li {
+    font-size: 18px;
+    line-height: 1.8;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .info-list li:last-child { border-bottom: none; }
+
+  /* ---- timeline ---- */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 1000px;
+    width: 100%;
+    position: relative;
+    padding-left: 40px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--coral), var(--purple));
+  }
+  .timeline-item {
+    position: relative;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -33px;
+    top: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--coral);
+    border: 2px solid var(--bg);
+  }
+  .timeline-item h4 {
+    font-size: 18px;
+    color: var(--coral);
+    margin-bottom: 6px;
+  }
+  .timeline-item p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+  }
+
+  /* ---- risk badges ---- */
+  .risk-row {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 1000px;
+    width: 100%;
+  }
+  .risk-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px 28px;
+  }
+  .risk-badge {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .risk-high { background: rgba(239,68,68,0.2); color: #ef4444; }
+  .risk-mid { background: rgba(234,179,8,0.2); color: #eab308; }
+  .risk-low { background: rgba(34,197,94,0.2); color: #22c55e; }
+  .risk-item h4 { font-size: 16px; margin-bottom: 4px; }
+  .risk-item p { font-size: 14px; color: var(--text-secondary); }
+
+  /* ---- action list ---- */
+  .action-list {
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .action-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .action-tag {
+    flex-shrink: 0;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 110px;
+    text-align: center;
+  }
+  .tag-now { background: rgba(244,114,182,0.25); color: var(--coral); border: 1px solid rgba(244,114,182,0.4); }
+  .tag-30 { background: rgba(129,140,248,0.2); color: var(--purple); border: 1px solid rgba(129,140,248,0.35); }
+  .tag-90 { background: rgba(56,189,248,0.2); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+  .tag-180 { background: rgba(52,211,153,0.2); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+  .action-text { font-size: 18px; line-height: 1.5; }
+
+  /* ---- price table ---- */
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1300px;
+    width: 100%;
+  }
+  .price-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .price-card .tier-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--coral);
+  }
+  .price-card .price-range {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .price-card .price-usd {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+  }
+  .price-card .metric {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 6px;
+  }
+  .price-card .metric span { color: var(--purple); font-weight: 600; }
+
+  /* ---- 3 col layout ---- */
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1300px;
+    width: 100%;
+  }
+  .col-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 32px 26px;
+  }
+  .col-card h3 {
+    font-size: 20px;
+    color: var(--coral);
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+  .col-card p, .col-card li {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.78);
+  }
+  .col-card ul { padding-left: 16px; }
+
+  /* ---- supply chain row ---- */
+  .supply-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .supply-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 28px 26px;
+  }
+  .supply-card h3 {
+    font-size: 17px;
+    color: var(--coral);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .supply-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+  }
+
+  /* ---- channel grid ---- */
+  .channel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .channel-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 28px 26px;
+  }
+  .channel-card h3 {
+    font-size: 17px;
+    color: var(--coral);
+    margin-bottom: 10px;
+  }
+  .channel-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.7;
+  }
+
+  /* ---- finance highlight ---- */
+  .finance-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    width: 100%;
+  }
+  .finance-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 36px 32px;
+    text-align: center;
+  }
+  .finance-card .f-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .finance-card .f-value {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--coral);
+    line-height: 1.2;
+  }
+  .finance-card .f-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 8px;
+  }
+
+  /* ---- overseas compare ---- */
+  .overseas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .overseas-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 36px 30px;
+    text-align: center;
+  }
+  .overseas-card .o-number {
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--coral);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .overseas-card .o-label {
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+
+  /* ---- cover ---- */
+  .cover-brand {
+    font-size: 64px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--coral), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .cover-en {
+    font-size: 22px;
+    color: var(--text-secondary);
+    letter-spacing: 6px;
+    margin-bottom: 48px;
+  }
+  .cover-tagline {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .cover-sub {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .cover-date {
+    font-size: 16px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 48px;
+    letter-spacing: 2px;
+  }
+
+  /* ---- decorative elements ---- */
+  .deco-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .glow-pink {
+    width: 400px; height: 400px;
+    background: rgba(244,114,182,0.12);
+    top: -100px; right: -100px;
+  }
+  .glow-purple {
+    width: 350px; height: 350px;
+    background: rgba(129,140,248,0.10);
+    bottom: -80px; left: -80px;
+  }
+
+  /* ---- gap blank check list ---- */
+  .check-list {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px 28px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .check-icon {
+    flex-shrink: 0;
+    font-size: 22px;
+    margin-top: 1px;
+  }
+
+  /* ---- persona cards ---- */
+  .persona-row {
+    display: flex;
+    gap: 32px;
+    max-width: 1200px;
+    width: 100%;
+    justify-content: center;
+  }
+  .persona-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 40px 36px;
+    flex: 1;
+    max-width: 520px;
+  }
+  .persona-card h3 {
+    font-size: 22px;
+    color: var(--coral);
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  .persona-card p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.78);
+  }
+
+  /* footer */
+  .slide-footer {
+    position: absolute;
+    bottom: 36px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 2px;
+  }
+
+  /* phase cards */
+  .phase-row {
+    display: flex;
+    gap: 24px;
+    max-width: 1300px;
+    width: 100%;
+    justify-content: center;
+  }
+  .phase-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .phase-card:nth-child(1)::before { background: var(--coral); }
+  .phase-card:nth-child(2)::before { background: var(--purple); }
+  .phase-card:nth-child(3)::before { background: #34d399; }
+  .phase-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .phase-card:nth-child(1) h3 { color: var(--coral); }
+  .phase-card:nth-child(2) h3 { color: var(--purple); }
+  .phase-card:nth-child(3) h3 { color: #34d399; }
+  .phase-card .phase-target {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .phase-card:nth-child(1) .phase-target { color: var(--coral); }
+  .phase-card:nth-child(2) .phase-target { color: var(--purple); }
+  .phase-card:nth-child(3) .phase-target { color: #34d399; }
+  .phase-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+  }
+
+  /* -- small screen adjustments -- */
+  @media (max-width: 1200px) {
+    .slide { padding: 40px 48px; }
+    .cover-brand { font-size: 48px; }
+    .price-grid { grid-template-columns: repeat(2, 1fr); }
+    .three-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="page-num"></div>
+<div id="nav-hint">← → / 滚轮翻页</div>
+
+<div id="deck">
+
+  <!-- ==================== SLIDE 1: 封面 ==================== -->
+  <div class="slide active" data-index="0">
+    <div class="deco-glow glow-pink"></div>
+    <div class="deco-glow glow-purple"></div>
+    <div class="cover-brand">她概念</div>
+    <div class="cover-en">She Concept</div>
+    <div class="cover-tagline">品牌战略部署报告</div>
+    <div class="cover-sub">从 <span class="highlight">7,000万</span> 到 <span class="highlight">1.5亿</span> 的增长路线图</div>
+    <div class="cover-date">2026年3月</div>
+  </div>
+
+  <!-- ==================== SLIDE 2: 企业画像 ==================== -->
+  <div class="slide" data-index="1">
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">企业画像</div>
+    <ul class="info-list">
+      <li><strong>品牌</strong>：她概念（<span class="purple-hl">She Concept</span>）</li>
+      <li><strong>品类</strong>：女性无缝内裤</li>
+      <li><strong>当前营收</strong>：<span class="highlight">7,000万元</span> &nbsp;|&nbsp; <strong>目标</strong>：<span class="highlight">1.5亿元</span>（<span class="purple-hl">+114%</span>）</li>
+      <li><strong>净利率</strong>：<span class="highlight">9%</span></li>
+      <li><strong>核心技术</strong>：无缝一体成型 + 抑菌功能</li>
+      <li><strong>转型方向</strong>：全球化 &times; 线上线下同步</li>
+    </ul>
+  </div>
+
+  <!-- ==================== SLIDE 3: 市场机遇 ==================== -->
+  <div class="slide" data-index="2">
+    <div class="deco-glow glow-purple"></div>
+    <div class="slide-title">市场机遇</div>
+    <div class="card-row">
+      <div class="card" style="text-align:center;">
+        <div class="card-label">中国女性内衣市场</div>
+        <div class="card-number">1,729亿</div>
+        <p>CAGR <span class="highlight">8.2%</span></p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="card-label">全球无缝内衣</div>
+        <div class="card-number">486亿美元</div>
+        <p>CAGR <span class="highlight">8.0%</span></p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="card-label">产后恢复内衣</div>
+        <div class="card-number">CAGR 10%</div>
+        <p>最高增速赛道</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 4: 竞争格局 ==================== -->
+  <div class="slide" data-index="3">
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">竞争格局</div>
+    <div class="card-row">
+      <div class="card">
+        <h3>蕉内 Bananain</h3>
+        <p><span class="highlight">~19亿</span> GMV<br>估值140亿<br>体感科技定位</p>
+      </div>
+      <div class="card">
+        <h3>Ubras</h3>
+        <p><span class="highlight">35亿</span> 营收<br>营销费率42%<br><span style="color:#ef4444;">不健康模式</span></p>
+      </div>
+      <div class="card">
+        <h3>NEIWAI 内外</h3>
+        <p>月销 <span class="highlight">2亿+</span><br>复购率50%+<br>最早出海品牌</p>
+      </div>
+      <div class="card" style="border-color: rgba(244,114,182,0.35);">
+        <h3 style="color:var(--purple);">竞争空白</h3>
+        <p>产后医学级背书<br>+ 可持续叙事<br><span class="highlight">她概念的机会</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 5: 竞争空白分析 ==================== -->
+  <div class="slide" data-index="4">
+    <div class="deco-glow glow-purple"></div>
+    <div class="slide-title">竞争空白分析</div>
+    <div class="check-list">
+      <div class="check-item">
+        <span class="check-icon" style="color:#22c55e;">&#10003;</span>
+        <div><strong>全球化布局空白</strong><br><span style="color:var(--text-secondary);">NEIWAI先行，但真正品牌化出海仍是蓝海</span></div>
+      </div>
+      <div class="check-item">
+        <span class="check-icon" style="color:#22c55e;">&#10003;</span>
+        <div><strong>产后细分医学级背书缺失</strong><br><span style="color:var(--text-secondary);">明确差异化机会</span></div>
+      </div>
+      <div class="check-item">
+        <span class="check-icon" style="color:#22c55e;">&#10003;</span>
+        <div><strong>可持续材料叙事</strong><br><span style="color:var(--text-secondary);">全球 <span class="highlight">31% YoY</span> 增速，国内品牌未有效结合</span></div>
+      </div>
+      <div class="check-item">
+        <span class="check-icon" style="color:#eab308;">&#9888;</span>
+        <div><strong>技术壁垒不高</strong><br><span style="color:var(--text-secondary);">业内共识"产品壁垒不高"，真正壁垒在 <span class="highlight">认证 + 专利 + 品牌心智</span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 6: 目标人群 ==================== -->
+  <div class="slide" data-index="5">
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">目标人群</div>
+    <div class="persona-row">
+      <div class="persona-card">
+        <h3>产后收腹女性</h3>
+        <p>
+          产后 <span class="highlight">0-24个月</span><br><br>
+          材质安全是硬门槛<br><br>
+          信任真实妈妈分享（<span class="highlight">52%</span>）<br>
+          远超明星代言（<span style="color:rgba(255,255,255,0.4);">4%</span>）
+        </p>
+      </div>
+      <div class="persona-card">
+        <h3>职场女性</h3>
+        <p>
+          <span class="highlight">8-12小时</span> 久坐场景<br><br>
+          主力价格带 <span class="highlight">59-129元</span><br><br>
+          <span class="highlight">81.9%</span> 选择线上购买
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 7: 海外市场机遇 ==================== -->
+  <div class="slide" data-index="6">
+    <div class="deco-glow glow-purple"></div>
+    <div class="slide-title">海外市场机遇</div>
+    <div class="overseas-grid">
+      <div class="overseas-card">
+        <div class="o-number">4次 vs 12次</div>
+        <div class="o-label">中国女性年购买内衣 vs 欧美<br>消费频次差距 = 增量空间</div>
+      </div>
+      <div class="overseas-card">
+        <div class="o-number">176亿美元</div>
+        <div class="o-label">美国女性内衣市场规模</div>
+      </div>
+      <div class="overseas-card">
+        <div class="o-number">16%</div>
+        <div class="o-label">DTC品牌占美国市场份额<br>新品牌仍有渗透窗口</div>
+      </div>
+      <div class="overseas-card">
+        <div class="o-number">+10-20%</div>
+        <div class="o-label">欧美消费者可持续溢价意愿</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 8: 产品矩阵与定价 ==================== -->
+  <div class="slide" data-index="7">
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">产品矩阵与定价</div>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="tier-name">引流款</div>
+        <div class="price-range">39-59元</div>
+        <div class="price-usd">$8-12</div>
+        <div class="metric">SKU占比 <span>20%</span></div>
+        <div class="metric">GMV贡献 <span>10%</span></div>
+      </div>
+      <div class="price-card" style="border-color: rgba(244,114,182,0.3);">
+        <div class="tier-name">主力款</div>
+        <div class="price-range" style="color:var(--coral);">69-129元</div>
+        <div class="price-usd">$15-28</div>
+        <div class="metric">SKU占比 <span>50%</span></div>
+        <div class="metric">GMV贡献 <span>55%</span></div>
+      </div>
+      <div class="price-card">
+        <div class="tier-name">功能款</div>
+        <div class="price-range">139-199元</div>
+        <div class="price-usd">$30-45</div>
+        <div class="metric">SKU占比 <span>20%</span></div>
+        <div class="metric">GMV贡献 <span>25%</span></div>
+      </div>
+      <div class="price-card">
+        <div class="tier-name">形象款</div>
+        <div class="price-range">239-399元</div>
+        <div class="price-usd">$50-80</div>
+        <div class="metric">SKU占比 <span>10%</span></div>
+        <div class="metric">GMV贡献 <span>10%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 9: 材料技术壁垒 ==================== -->
+  <div class="slide" data-index="8">
+    <div class="deco-glow glow-purple"></div>
+    <div class="slide-title">材料技术壁垒</div>
+    <div class="three-col">
+      <div class="col-card">
+        <h3>石墨烯锦纶</h3>
+        <ul>
+          <li>TRL 8-9 成熟技术</li>
+          <li>远红外升温 <span class="highlight">1.5-3&deg;C</span></li>
+          <li>成本 <span class="highlight">+50-80%</span></li>
+          <li style="color:var(--coral); font-weight:600; list-style:none; margin-top:12px;">&#9733; 首选功能材料</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h3>GRS回收锦纶</h3>
+        <ul>
+          <li>比原生便宜 <span class="highlight">15-25%</span></li>
+          <li>可持续故事强</li>
+          <li style="color:var(--purple); font-weight:600; list-style:none; margin-top:12px;">&#9733; 成本与品牌双赢</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h3>益生菌微胶囊</h3>
+        <ul>
+          <li>创新技术路线</li>
+          <li><span style="color:#eab308;">50次洗涤后失效</span></li>
+          <li style="color:var(--text-secondary); font-weight:600; list-style:none; margin-top:12px;">&#9657; 建议作为2.0迭代方案</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 10: 供应链策略 ==================== -->
+  <div class="slide" data-index="9">
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">供应链策略</div>
+    <div class="supply-grid">
+      <div class="supply-card">
+        <h3>核心织造 — 自建</h3>
+        <p>最高战略优先级<br>掌控核心工艺与品质</p>
+      </div>
+      <div class="supply-card">
+        <h3>产能弹性 — 义乌/汕头代工</h3>
+        <p>MOQ <span class="highlight">500-3,000件</span><br>应对需求波动</p>
+      </div>
+      <div class="supply-card">
+        <h3>出海产能 — 越南基地</h3>
+        <p>CPTPP关税优势<br>服务海外DTC订单</p>
+      </div>
+      <div class="supply-card">
+        <h3>单件成本</h3>
+        <p>普通款 <span class="highlight">15-24元</span><br>功能款 <span class="highlight">21-42元</span><br>毛利率 <span class="highlight">55-75%</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 11: 渠道转型 ==================== -->
+  <div class="slide" data-index="10">
+    <div class="deco-glow glow-purple"></div>
+    <div class="slide-title">渠道转型</div>
+    <div class="channel-grid">
+      <div class="channel-card">
+        <h3>抖音自播 + 小红书种草</h3>
+        <p>利用<span class="highlight">红猫计划</span>红利<br>短视频 + KOC矩阵种草</p>
+      </div>
+      <div class="channel-card">
+        <h3>微信私域</h3>
+        <p>复购率提升 <span class="highlight">30-50%</span><br>LTV最大化的核心阵地</p>
+      </div>
+      <div class="channel-card">
+        <h3>经销商升级</h3>
+        <p>差异化SKU避免冲突<br>线上专供款分层管理</p>
+      </div>
+      <div class="channel-card">
+        <h3>海外 DTC</h3>
+        <p>TikTok Shop US 冷启动<br>CPC仅 <span class="highlight">$0.35-1.00</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 12: 财务模型 ==================== -->
+  <div class="slide" data-index="11">
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">财务模型</div>
+    <div class="finance-grid">
+      <div class="finance-card">
+        <div class="f-label">毛利率提升</div>
+        <div class="f-value">38% → 54%</div>
+        <div class="f-sub">经销商 → DTC（+16pp）</div>
+      </div>
+      <div class="finance-card">
+        <div class="f-label">年投入预算</div>
+        <div class="f-value">3,000-5,000万</div>
+        <div class="f-sub">品牌建设 + 渠道扩张</div>
+      </div>
+      <div class="finance-card">
+        <div class="f-label">DTC贡献利润率</div>
+        <div class="f-value">50-70%</div>
+        <div class="f-sub">品牌直营利润贡献</div>
+      </div>
+      <div class="finance-card">
+        <div class="f-label">LTV:CAC 目标</div>
+        <div class="f-value" style="color:var(--purple);">&ge; 3:1</div>
+        <div class="f-sub">健康获客效率底线</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 13: 增长路线图 ==================== -->
+  <div class="slide" data-index="12">
+    <div class="deco-glow glow-purple"></div>
+    <div class="slide-title">增长路线图</div>
+    <div class="phase-row">
+      <div class="phase-card">
+        <h3>Phase 1（0-12月）</h3>
+        <div class="phase-target">→ 1亿</div>
+        <p>夯实基础<br>线上爆破 + 产后爆品<br>认证体系搭建</p>
+      </div>
+      <div class="phase-card">
+        <h3>Phase 2（12-24月）</h3>
+        <div class="phase-target">→ 1.2-1.3亿</div>
+        <p>品类扩张<br>横向品类 + 可持续产品线<br>海外试水</p>
+      </div>
+      <div class="phase-card">
+        <h3>Phase 3（24-36月）</h3>
+        <div class="phase-target">→ 1.5亿+</div>
+        <p>全球化<br>海外放量<br>DTC比例 40%+</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 14: 风险矩阵 ==================== -->
+  <div class="slide" data-index="13">
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">风险矩阵</div>
+    <div class="risk-row">
+      <div class="risk-item">
+        <div class="risk-badge risk-high">&#9679;</div>
+        <div>
+          <h4>高风险：益生菌量产稳定性</h4>
+          <p>对策：用石墨烯方案过渡，益生菌作为 2.0 迭代</p>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-badge risk-mid">&#9679;</div>
+        <div>
+          <h4>中风险：营销费率上升</h4>
+          <p>对策：控制 &le;25%，重私域，提升自然流量占比</p>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-badge risk-mid">&#9679;</div>
+        <div>
+          <h4>中风险：渠道冲突</h4>
+          <p>对策：线上专供款差异化，SKU分层管理</p>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-badge risk-low">&#9679;</div>
+        <div>
+          <h4>低风险：竞品跟进</h4>
+          <p>对策：先发优势 + 认证壁垒 + 品牌心智护城河</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SLIDE 15: 下一步行动 ==================== -->
+  <div class="slide" data-index="14">
+    <div class="deco-glow glow-purple"></div>
+    <div class="deco-glow glow-pink"></div>
+    <div class="slide-title">下一步行动</div>
+    <div class="action-list">
+      <div class="action-item">
+        <span class="action-tag tag-now">立即</span>
+        <span class="action-text">完成 <span class="highlight">OEKO-Tex Class I</span> 认证申请</span>
+      </div>
+      <div class="action-item">
+        <span class="action-tag tag-30">30天内</span>
+        <span class="action-text">抖音旗舰店开业 + 小红书种草矩阵启动</span>
+      </div>
+      <div class="action-item">
+        <span class="action-tag tag-90">90天内</span>
+        <span class="action-text">产后功能爆品上市</span>
+      </div>
+      <div class="action-item">
+        <span class="action-tag tag-180">180天内</span>
+        <span class="action-text">TikTok Shop US 冷启动</span>
+      </div>
+    </div>
+    <div class="slide-footer">她概念 She Concept &nbsp;|&nbsp; 2026</div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const pageNum = document.getElementById('page-num');
+  const progress = document.getElementById('progress');
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === current);
+    });
+    pageNum.textContent = (current + 1) + ' / ' + total;
+    progress.style.width = ((current + 1) / total * 100) + '%';
+  }
+
+  function next() {
+    if (current < total - 1) { current++; update(); }
+  }
+  function prev() {
+    if (current > 0) { current--; update(); }
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault(); next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault(); prev();
+    } else if (e.key === 'Home') {
+      e.preventDefault(); current = 0; update();
+    } else if (e.key === 'End') {
+      e.preventDefault(); current = total - 1; update();
+    }
+  });
+
+  // Mouse wheel
+  let wheelCooldown = false;
+  document.addEventListener('wheel', function(e) {
+    if (wheelCooldown) return;
+    wheelCooldown = true;
+    setTimeout(function() { wheelCooldown = false; }, 600);
+    if (e.deltaY > 0) next();
+    else if (e.deltaY < 0) prev();
+  }, { passive: true });
+
+  // Touch swipe
+  let touchStartY = 0;
+  document.addEventListener('touchstart', function(e) {
+    touchStartY = e.changedTouches[0].screenY;
+  });
+  document.addEventListener('touchend', function(e) {
+    const dy = touchStartY - e.changedTouches[0].screenY;
+    if (Math.abs(dy) > 50) {
+      if (dy > 0) next(); else prev();
+    }
+  });
+
+  // Click to advance (optional: click right half = next, left half = prev)
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('a, button')) return;
+    if (e.clientX > window.innerWidth * 0.6) next();
+    else if (e.clientX < window.innerWidth * 0.4) prev();
+  });
+
+  update();
+})();
+</script>
+
+</body>
+</html>

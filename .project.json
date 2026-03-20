@@ -1,0 +1,9 @@
+{
+  "name": "她概念品牌战略研究中心",
+  "nameEn": "She Concept Brand Strategy",
+  "type": "business",
+  "port": 4110,
+  "stack": ["HTML", "CSS", "Chart.js", "Nginx"],
+  "description": "女性无缝内裤品牌战略研究 — 18个核心问题 × 6维度深度分析",
+  "createdAt": "2026-03-20"
+}

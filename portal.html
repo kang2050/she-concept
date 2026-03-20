@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>她概念 She Concept — 品牌战略研究中心</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0e1a;--card:#0f172a;--card2:#1e293b;--border:rgba(255,255,255,.06);--pink:#f472b6;--purple:#818cf8;--green:#34d399;--yellow:#fbbf24;--orange:#f97316;--red:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--dim:#475569}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+::selection{background:var(--pink);color:#fff}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,26,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;height:56px;gap:2rem}
+nav .logo{font-size:1.1rem;font-weight:700;color:var(--pink);white-space:nowrap}
+nav .links{display:flex;gap:1.5rem;overflow-x:auto;flex:1}
+nav .links a{color:var(--muted);text-decoration:none;font-size:.82rem;white-space:nowrap;transition:color .2s}
+nav .links a:hover{color:var(--pink)}
+nav .tools{display:flex;gap:.6rem;flex-shrink:0}
+nav .tools a{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .75rem;border-radius:8px;font-size:.78rem;text-decoration:none;color:var(--text);border:1px solid var(--border);transition:all .2s;white-space:nowrap}
+nav .tools a:hover{border-color:var(--pink);color:var(--pink);background:rgba(244,114,182,.06)}
+
+/* Hero */
+.hero{padding:8rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(244,114,182,.08) 0%,transparent 70%);pointer-events:none}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem}
+.hero h1 span{background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .sub{font-size:1.15rem;color:var(--muted);max-width:700px;margin:0 auto 2.5rem}
+.hero .badges{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
+.hero .badge{padding:.4rem 1rem;border-radius:100px;font-size:.8rem;background:rgba(255,255,255,.04);border:1px solid var(--border)}
+.hero .badge em{font-style:normal;color:var(--pink);font-weight:600}
+
+/* Quick Stats */
+.qstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;max-width:1200px;margin:-1rem auto 3rem;padding:0 2rem}
+.qstat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:transform .2s}
+.qstat:hover{transform:translateY(-2px)}
+.qstat .val{font-size:2rem;font-weight:800;margin:.25rem 0}
+.qstat .label{font-size:.82rem;color:var(--muted)}
+.qstat.pink .val{color:var(--pink)}
+.qstat.purple .val{color:var(--purple)}
+.qstat.green .val{color:var(--green)}
+.qstat.yellow .val{color:var(--yellow)}
+
+/* Section */
+section{max-width:1200px;margin:0 auto;padding:3rem 2rem}
+section h2{font-size:1.8rem;font-weight:700;margin-bottom:.5rem;display:flex;align-items:center;gap:.6rem}
+section h2 .num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pink),var(--purple));font-size:.9rem;color:#fff;flex-shrink:0}
+section .desc{color:var(--muted);margin-bottom:2rem;font-size:.95rem}
+section h3{font-size:1.2rem;font-weight:600;margin:2rem 0 1rem;color:var(--text);padding-left:.75rem;border-left:3px solid var(--pink)}
+
+/* Cards Grid */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all .25s}
+.card:hover{border-color:rgba(244,114,182,.2);transform:translateY(-2px)}
+.card .tag{display:inline-block;padding:.15rem .6rem;border-radius:6px;font-size:.72rem;font-weight:600;margin-bottom:.75rem}
+.card .tag.pink{background:rgba(244,114,182,.12);color:var(--pink)}
+.card .tag.purple{background:rgba(129,140,248,.12);color:var(--purple)}
+.card .tag.green{background:rgba(52,211,153,.12);color:var(--green)}
+.card .tag.yellow{background:rgba(251,191,36,.12);color:var(--yellow)}
+.card .tag.orange{background:rgba(249,115,22,.12);color:var(--orange)}
+.card .tag.red{background:rgba(239,68,68,.12);color:var(--red)}
+.card h4{font-size:1.05rem;margin-bottom:.5rem}
+.card .big{font-size:1.8rem;font-weight:800;margin:.25rem 0}
+.card p,.card li{font-size:.88rem;color:var(--muted);line-height:1.65}
+.card ul{padding-left:1.2rem;margin-top:.5rem}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin:1.5rem 0;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:var(--card2);color:var(--muted);font-weight:600;text-align:left;padding:.75rem 1rem;white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:.65rem 1rem;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+td strong{color:var(--pink)}
+
+/* Bars */
+.bar-group{margin:1.5rem 0}
+.bar-item{margin-bottom:.75rem}
+.bar-label{display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:.3rem}
+.bar-track{height:28px;background:rgba(255,255,255,.04);border-radius:8px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:.75rem;font-size:.78rem;font-weight:600;color:#fff;transition:width 1s ease}
+.bar-fill.pink{background:linear-gradient(90deg,var(--pink),#e879a8)}
+.bar-fill.purple{background:linear-gradient(90deg,var(--purple),#6366f1)}
+.bar-fill.green{background:linear-gradient(90deg,var(--green),#10b981)}
+.bar-fill.yellow{background:linear-gradient(90deg,var(--yellow),#f59e0b)}
+.bar-fill.dim{background:var(--dim)}
+
+/* Timeline */
+.timeline{position:relative;padding-left:2rem;margin:2rem 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--pink),var(--purple),var(--green))}
+.tl-item{position:relative;margin-bottom:2rem;padding-left:1.5rem}
+.tl-item::before{content:'';position:absolute;left:-2rem;top:6px;width:18px;height:18px;border-radius:50%;border:3px solid var(--pink);background:var(--bg)}
+.tl-item:nth-child(2)::before{border-color:var(--purple)}
+.tl-item:nth-child(3)::before{border-color:var(--green)}
+.tl-item .phase{font-size:.78rem;color:var(--pink);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.tl-item:nth-child(2) .phase{color:var(--purple)}
+.tl-item:nth-child(3) .phase{color:var(--green)}
+.tl-item h4{font-size:1.05rem;margin:.25rem 0 .5rem}
+.tl-item p{font-size:.88rem;color:var(--muted)}
+
+/* Risk Matrix */
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.risk-cell{padding:1.25rem;border-radius:12px;font-size:.88rem}
+.risk-cell.red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)}
+.risk-cell.orange{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2)}
+.risk-cell.yellow{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.2)}
+.risk-cell.green{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2)}
+.risk-cell .rlabel{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.35rem}
+.risk-cell.red .rlabel{color:var(--red)}
+.risk-cell.orange .rlabel{color:var(--orange)}
+.risk-cell.yellow .rlabel{color:var(--yellow)}
+.risk-cell.green .rlabel{color:var(--green)}
+
+/* Priority */
+.priority-item{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.priority-item .stars{font-size:.85rem;color:var(--yellow);min-width:6rem}
+.priority-item .pbar{flex:1;height:10px;background:rgba(255,255,255,.04);border-radius:5px;overflow:hidden}
+.priority-item .pfill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--pink),var(--purple))}
+.priority-item .plabel{font-size:.88rem;min-width:200px}
+
+/* Tool Cards */
+.tool-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;margin:2rem 0}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;display:flex;flex-direction:column;gap:1rem;transition:all .25s;text-decoration:none;color:var(--text)}
+.tool-card:hover{border-color:var(--pink);transform:translateY(-3px);box-shadow:0 12px 40px rgba(244,114,182,.08)}
+.tool-card .icon{font-size:2rem}
+.tool-card h4{font-size:1.15rem}
+.tool-card p{font-size:.85rem;color:var(--muted);flex:1}
+.tool-card .action{color:var(--pink);font-size:.85rem;font-weight:600}
+
+/* Divider */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:3rem 0}
+
+/* Footer */
+footer{text-align:center;padding:3rem 2rem;color:var(--dim);font-size:.82rem;border-top:1px solid var(--border)}
+footer a{color:var(--pink);text-decoration:none}
+
+/* Animate on scroll */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){
+  nav .links{display:none}
+  .hero h1{font-size:2rem}
+  .qstats{grid-template-columns:1fr 1fr}
+  .risk-grid{grid-template-columns:1fr}
+  .priority-item .plabel{min-width:120px;font-size:.8rem}
+  nav .tools a span{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">她概念 She Concept</div>
+  <div class="links">
+    <a href="#market">市场规模</a>
+    <a href="#compete">竞品格局</a>
+    <a href="#consumer">消费者</a>
+    <a href="#supply">供应链</a>
+    <a href="#channel">渠道转型</a>
+    <a href="#finance">财务模型</a>
+    <a href="#strategy">战略总纲</a>
+    <a href="#tools">工具</a>
+  </div>
+  <div class="tools">
+    <a href="slides.html"><span>📊</span> PPT</a>
+    <a href="finance.html"><span>📈</span> 财务</a>
+    <a href="charts.html"><span>📉</span> 图表</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <h1><span>她概念</span> 品牌战略研究中心</h1>
+  <p class="sub">基于 18 个核心战略问题的六维度深度研究，覆盖市场规模、竞品格局、消费者洞察、材料供应链、渠道转型与财务模型</p>
+  <div class="badges">
+    <span class="badge">📅 2026-03-20</span>
+    <span class="badge">🔍 多源网络深度检索</span>
+    <span class="badge">📊 <em>18</em> 个核心问题</span>
+    <span class="badge">📈 <em>6</em> 大战略维度</span>
+    <span class="badge">🎯 从 <em>7,000万</em> 到 <em>1.5亿</em></span>
+  </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="qstats">
+  <div class="qstat pink"><div class="label">当前营收</div><div class="val">¥7,000万</div><div class="label">净利率 9%</div></div>
+  <div class="qstat purple"><div class="label">目标营收</div><div class="val">¥1.5亿</div><div class="label">增长 +114%</div></div>
+  <div class="qstat green"><div class="label">中国内衣市场</div><div class="val">1,729亿</div><div class="label">CAGR 8.2%</div></div>
+  <div class="qstat yellow"><div class="label">全球无缝内衣</div><div class="val">$486亿</div><div class="label">CAGR 8.0%</div></div>
+  <div class="qstat pink"><div class="label">产后细分CAGR</div><div class="val">10%</div><div class="label">最高增速赛道</div></div>
+  <div class="qstat green"><div class="label">可持续内衣增速</div><div class="val">+31%</div><div class="label">YoY</div></div>
+</div>
+
+<!-- Section 1: Market -->
+<section id="market" class="fade-up">
+  <h2><span class="num">1</span> 市场规模与增长趋势</h2>
+  <p class="desc">回答底稿 Q1-Q3：中国/全球市场规模、产后细分容量、可持续趋势</p>
+
+  <h3>中国女性内衣市场</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>指标</th><th>数值</th><th>来源</th></tr>
+    <tr><td>2024 年市场规模</td><td><strong>1,728.9 亿元</strong></td><td>前瞻产业研究院</td></tr>
+    <tr><td>2028 年预测</td><td><strong>370 亿美元（≈2,700 亿元）</strong></td><td>前瞻产业研究院</td></tr>
+    <tr><td>2024-2028 CAGR</td><td><strong>~8.2%</strong></td><td>报告大厅</td></tr>
+    <tr><td>无钢圈偏好率</td><td><strong>76.6%</strong></td><td>艾媒咨询</td></tr>
+    <tr><td>线上购买占比</td><td><strong>81.9%</strong></td><td>艾媒咨询</td></tr>
+  </table></div>
+
+  <h3>全球无缝内衣市场</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>指标</th><th>数值</th><th>来源</th></tr>
+    <tr><td>2025 年全球规模</td><td><strong>485.6 亿美元</strong></td><td>Global Growth Insights</td></tr>
+    <tr><td>2027 年预测</td><td><strong>566.2 亿美元</strong></td><td>Global Growth Insights</td></tr>
+    <tr><td>CAGR</td><td><strong>7.98%</strong></td><td>多源交叉验证</td></tr>
+  </table></div>
+
+  <h3>产后恢复内衣（第一增长曲线）</h3>
+  <div class="cards">
+    <div class="card"><div class="tag pink">产后塑形衣</div><div class="big" style="color:var(--pink)">CAGR 10%</div><p>全球年销量 580 万件，显著高于整体内衣 CAGR 8%</p></div>
+    <div class="card"><div class="tag purple">孕产内衣</div><div class="big" style="color:var(--purple)">$87.8亿</div><p>2025 年市场规模，预计 2030 年达 $139.1 亿（CAGR 9.6%）</p></div>
+    <div class="card"><div class="tag green">可持续内衣</div><div class="big" style="color:var(--green)">+31% YoY</div><p>生态内衣同比增速，27% 新品使用可持续材料，40%+ 品牌承诺可持续</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Section 2: Competition -->
+<section id="compete" class="fade-up">
+  <h2><span class="num">2</span> 竞品深度分析</h2>
+  <p class="desc">回答底稿 Q4-Q6：竞品 SKU/定价/渠道/专利/海外布局</p>
+
+  <h3>竞品营收规模对比</h3>
+  <div class="bar-group">
+    <div class="bar-item"><div class="bar-label"><span>Skims</span><span style="color:var(--pink)">¥75亿（$10-12亿）</span></div><div class="bar-track"><div class="bar-fill purple" style="width:100%"></div></div></div>
+    <div class="bar-item"><div class="bar-label"><span>Ubras</span><span style="color:var(--pink)">¥35亿</span></div><div class="bar-track"><div class="bar-fill purple" style="width:47%"></div></div></div>
+    <div class="bar-item"><div class="bar-label"><span>NEIWAI 内外</span><span style="color:var(--pink)">¥~24亿</span></div><div class="bar-track"><div class="bar-fill purple" style="width:32%"></div></div></div>
+    <div class="bar-item"><div class="bar-label"><span>蕉内 Bananain</span><span style="color:var(--pink)">¥~19亿</span></div><div class="bar-track"><div class="bar-fill purple" style="width:25%"></div></div></div>
+    <div class="bar-item"><div class="bar-label"><span>ThirdLove</span><span style="color:var(--pink)">¥~5亿</span></div><div class="bar-track"><div class="bar-fill dim" style="width:7%"></div></div></div>
+    <div class="bar-item"><div class="bar-label"><span><strong>她概念 She Concept</strong></span><span style="color:var(--pink);font-weight:700">¥0.7亿</span></div><div class="bar-track"><div class="bar-fill pink" style="width:3%">起步</div></div></div>
+  </div>
+
+  <h3>核心竞品画像</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="tag purple">蕉内 Bananain</div>
+      <h4>体感科技公司</h4>
+      <div class="big" style="color:var(--purple)">~19亿 GMV</div>
+      <ul><li>估值 140 亿（胡润独角兽榜）</li><li>内裤 SPU 占 39%，GMV 贡献 51%</li><li>热皮/凉皮/银皮系列</li><li>海外布局基本空白</li><li>业内评价"产品壁垒不高"</li></ul>
+    </div>
+    <div class="card">
+      <div class="tag orange">Ubras</div>
+      <h4>无尺码内衣开创者</h4>
+      <div class="big" style="color:var(--orange)">35亿 营收</div>
+      <ul><li>营销费率 <strong>42%</strong>（6.5 亿/年）— 不健康</li><li>全国 54 家线下门店</li><li>黑猫投诉 300+（品质口碑承压）</li><li>海外主攻华人市场</li><li>品类从文胸扩展至全品类</li></ul>
+    </div>
+    <div class="card">
+      <div class="tag green">内外 NEIWAI</div>
+      <h4>东方美学生活方式</h4>
+      <div class="big" style="color:var(--green)">月销 2亿+</div>
+      <ul><li>D 轮融资 $1 亿（光速/启明）</li><li>复购率 <strong>50%+</strong></li><li><strong>最早出海</strong>：2015 年起，独立站 + YouTube</li><li>品类延伸至滑雪服（3000 元级）</li></ul>
+    </div>
+    <div class="card">
+      <div class="tag pink">竞争空白 = 她概念机会</div>
+      <h4>4 个已验证的蓝海</h4>
+      <ul>
+        <li>✅ <strong>产后医学级背书</strong> — 国内外均无</li>
+        <li>✅ <strong>品牌化出海</strong> — 真正英文品牌仍是蓝海</li>
+        <li>✅ <strong>可持续×情绪价值叙事</strong> — 国内品牌未有效结合</li>
+        <li>⚠️ 技术壁垒不高 — 真正壁垒在认证+专利+品牌心智</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>海外标杆参考</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>品牌</th><th>营收</th><th>估值</th><th>核心模式</th><th>关键指标</th></tr>
+    <tr><td>ThirdLove</td><td>$69M（2024）</td><td>—</td><td>DTC + 数据驱动（78 尺码）</td><td>复购率 <strong>60%</strong>，转化率 2.0-2.5%</td></tr>
+    <tr><td>Skims</td><td><strong>$10-12 亿</strong></td><td><strong>$40-50 亿</strong></td><td>名人 IP + DTC + 批发</td><td>内裤 $18-48，IG 700 万粉</td></tr>
+    <tr><td>Parade</td><td>未盈利</td><td>B 轮 $20M</td><td>DTC → 转向批发</td><td>战略调整中</td></tr>
+  </table></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Section 3: Consumer -->
+<section id="consumer" class="fade-up">
+  <h2><span class="num">3</span> 消费者洞察</h2>
+  <p class="desc">回答底稿 Q7-Q9：产后购买路径、职场女性消费行为、海外市场差异</p>
+
+  <h3>产后女性购买决策路径</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="tag pink">信息来源</div>
+      <h4>微信 + 小红书主导</h4>
+      <div class="bar-group">
+        <div class="bar-item"><div class="bar-label"><span>微信朋友圈</span><span>41%</span></div><div class="bar-track"><div class="bar-fill pink" style="width:41%"></div></div></div>
+        <div class="bar-item"><div class="bar-label"><span>小红书</span><span>28%</span></div><div class="bar-track"><div class="bar-fill pink" style="width:28%"></div></div></div>
+        <div class="bar-item"><div class="bar-label"><span>其他渠道</span><span>31%</span></div><div class="bar-track"><div class="bar-fill dim" style="width:31%"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="tag green">信任度排序</div>
+      <h4>真实分享 >> 明星代言</h4>
+      <div class="bar-group">
+        <div class="bar-item"><div class="bar-label"><span>真实妈妈分享</span><span><strong>52%</strong></span></div><div class="bar-track"><div class="bar-fill green" style="width:52%"></div></div></div>
+        <div class="bar-item"><div class="bar-label"><span>母婴专家/医生</span><span>23%</span></div><div class="bar-track"><div class="bar-fill green" style="width:23%"></div></div></div>
+        <div class="bar-item"><div class="bar-label"><span>时尚博主</span><span>14%</span></div><div class="bar-track"><div class="bar-fill dim" style="width:14%"></div></div></div>
+        <div class="bar-item"><div class="bar-label"><span>明星推荐</span><span style="color:var(--red)">仅 4%</span></div><div class="bar-track"><div class="bar-fill dim" style="width:4%"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>职场女性消费行为</h3>
+  <div class="cards">
+    <div class="card"><div class="tag purple">主力价格带</div><div class="big" style="color:var(--purple)">59-129 元</div><p>44.3% 接受 50-100 元 | 36.6% 接受 100-200 元</p></div>
+    <div class="card"><div class="tag purple">线上偏好</div><div class="big" style="color:var(--purple)">81.9%</div><p>选择线上购买内衣</p></div>
+    <div class="card"><div class="tag purple">购买频次</div><div class="big" style="color:var(--purple)">月/数月</div><p>87.8% 消费者每月或每数月购买一次</p></div>
+  </div>
+
+  <h3>中国 vs 海外消费差异</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>维度</th><th>中国</th><th>美国/AU/CA</th></tr>
+    <tr><td>年购买频次</td><td>~4 次</td><td><strong>~12 次</strong></td></tr>
+    <tr><td>人均年消费</td><td>~300 元</td><td><strong>~$100（700 元）</strong></td></tr>
+    <tr><td>品牌集中度</td><td>分散</td><td>VS 22.4% 份额，DTC 合计 16%</td></tr>
+    <tr><td>可持续溢价意愿</td><td>有但不强</td><td><strong>显著（实际 +10-20%）</strong></td></tr>
+    <tr><td>核心决策因素</td><td>功能+性价比</td><td><strong>舒适度+尺码精准+可持续</strong></td></tr>
+  </table></div>
+  <p style="color:var(--muted);font-size:.88rem;margin-top:1rem">💡 <strong>营销启示</strong>：产后线重点布局 UGC × 医学专家背书 × 小红书种草。明星代言 ROI 极低（4% 信任度）。海外以独立品牌心智出海，定价 $25-55。</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- Section 4: Supply Chain -->
+<section id="supply" class="fade-up">
+  <h2><span class="num">4</span> 材料技术与供应链</h2>
+  <p class="desc">回答底稿 Q10-Q12：益生菌/石墨烯量产、代工厂分布、可持续材料成本</p>
+
+  <h3>功能材料技术评估</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="tag green">推荐首选</div>
+      <h4>石墨烯锦纶</h4>
+      <p>TRL 8-9（商业化成熟），远红外升温 1.5-3°C 有物理依据</p>
+      <ul><li>成本溢价：+50-80%</li><li>首选厂商：济南圣泉（A 股 605589）</li><li>国内年产能 5,000-10,000 吨</li></ul>
+    </div>
+    <div class="card">
+      <div class="tag green">成本最优</div>
+      <h4>GRS 回收锦纶</h4>
+      <p><strong>比原生便宜 15-25%</strong>，且具备可持续品牌故事</p>
+      <ul><li>成本与品牌价值双赢</li><li>厂商：浙江海利环保等</li><li>适合可持续产品线</li></ul>
+    </div>
+    <div class="card">
+      <div class="tag red">高风险</div>
+      <h4>益生菌微胶囊</h4>
+      <p>50 次洗涤后功能<strong>基本失效</strong>（残留率仅 10-20%）</p>
+      <ul><li>成本溢价：+40-80%</li><li>建议作为 2.0 迭代方案</li><li>可用"可替换内垫"方案过渡</li></ul>
+    </div>
+  </div>
+
+  <h3>单件产品成本矩阵</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>成本项</th><th>普通款</th><th>石墨烯款</th><th>益生菌款</th><th>可持续款</th></tr>
+    <tr><td>单件总成本</td><td><strong>15-24 元</strong></td><td><strong>21-34 元</strong></td><td><strong>26-42 元</strong></td><td><strong>19-29 元</strong></td></tr>
+    <tr><td>建议零售价</td><td>49-89 元</td><td>99-169 元</td><td>119-199 元</td><td>79-129 元</td></tr>
+    <tr><td>毛利率</td><td><strong>55-70%</strong></td><td><strong>60-75%</strong></td><td><strong>60-75%</strong></td><td><strong>55-70%</strong></td></tr>
+  </table></div>
+  <p style="color:var(--muted);font-size:.88rem;margin-top:.5rem">功能款成本更高但零售溢价更大，毛利率反而更优 — 核心利润引擎</p>
+
+  <h3>代工厂 MOQ 与成本速查</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>产区</th><th>MOQ（件）</th><th>单件加工费</th><th>含料总成本/件</th><th>交期（天）</th></tr>
+    <tr><td>义乌（成本最低）</td><td><strong>500-1,000</strong></td><td>5-10 元</td><td>12-25 元</td><td>15-25</td></tr>
+    <tr><td>汕头（全产业链）</td><td>1,000-3,000</td><td>8-15 元</td><td>20-40 元</td><td>20-35</td></tr>
+    <tr><td>南通（中高端）</td><td>2,000-5,000</td><td>12-25 元</td><td>30-60 元</td><td>25-40</td></tr>
+    <tr><td>越南（关税优势）</td><td>5,000-10,000</td><td>8-18 元</td><td>25-45 元</td><td>35-60</td></tr>
+  </table></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Section 5: Channel -->
+<section id="channel" class="fade-up">
+  <h2><span class="num">5</span> 渠道与商业模式转型</h2>
+  <p class="desc">回答底稿 Q13-Q15：DTC 转型、跨境独立站、平台电商竞争</p>
+
+  <h3>DTC 转型渠道冲突管理</h3>
+  <div class="cards">
+    <div class="card"><div class="tag purple">差异化 SKU</div><h4>线上专供款 vs 线下专供款</h4><p>避免直接比价，保护经销商利益</p></div>
+    <div class="card"><div class="tag purple">区域保护</div><h4>线上订单按区域分配</h4><p>对应经销商获得服务费+体验费</p></div>
+    <div class="card"><div class="tag purple">渐进转型</div><h4>先做线上增量</h4><p>不动存量经销商利益，增量做 DTC</p></div>
+  </div>
+
+  <h3>跨境 DTC 关键基准</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>指标</th><th>行业基准</th><th>说明</th></tr>
+    <tr><td>CAC（获客成本）</td><td><strong>$50-100</strong></td><td>电商均值 $78</td></tr>
+    <tr><td>LTV:CAC 健康比</td><td><strong>≥ 3:1</strong></td><td>&lt;1:1 不可持续</td></tr>
+    <tr><td>CAC 回收周期</td><td><strong>&lt; 12 个月</strong></td><td>—</td></tr>
+    <tr><td>贡献利润率</td><td><strong>50-70%</strong></td><td>成功 DTC 品牌</td></tr>
+    <tr><td>独立站首年投入</td><td><strong>200-350 万元</strong></td><td>建站+本地化+支付/物流+人力</td></tr>
+  </table></div>
+
+  <h3>平台广告成本对比</h3>
+  <div class="cards">
+    <div class="card"><div class="tag yellow">TikTok Shop US</div><div class="big" style="color:var(--yellow)">CPC $0.35-1.00</div><p>月 GMV > $10 亿，内容驱动适合冷启动</p></div>
+    <div class="card"><div class="tag orange">Amazon</div><div class="big" style="color:var(--orange)">CPC $0.50-1.50</div><p>佣金 ~15% + FBA 费，净利率 8-15%</p></div>
+    <div class="card"><div class="tag pink">小红书</div><div class="big" style="color:var(--pink)">真实 ROI 3.6</div><p>短期 ROI 1.2 × 年复购系数 3 = 真实 ROI 3.6</p></div>
+  </div>
+
+  <p style="color:var(--muted);font-size:.88rem;margin-top:1rem">🔥 <strong>红利期</strong>：2025 年 5-6 月小红书-天猫"红猫计划"/ 小红书-京东"红京计划"上线 — 种草笔记直挂电商链接，全新流量红利。</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- Section 6: Finance -->
+<section id="finance" class="fade-up">
+  <h2><span class="num">6</span> 财务模型与增长路径</h2>
+  <p class="desc">回答底稿 Q16-Q18：资本投入、财务结构、融资判断</p>
+
+  <h3>渠道毛利率对比</h3>
+  <div class="bar-group">
+    <div class="bar-item"><div class="bar-label"><span>直营 DTC</span><span style="color:var(--green);font-weight:700">54%</span></div><div class="bar-track"><div class="bar-fill green" style="width:54%">54%</div></div></div>
+    <div class="bar-item"><div class="bar-label"><span>线上电商</span><span>40%</span></div><div class="bar-track"><div class="bar-fill purple" style="width:40%">40%</div></div></div>
+    <div class="bar-item"><div class="bar-label"><span>经销商</span><span>38%</span></div><div class="bar-track"><div class="bar-fill dim" style="width:38%">38%</div></div></div>
+  </div>
+  <p style="color:var(--muted);font-size:.88rem">DTC 转型可带来 <strong>+16pp</strong> 毛利率提升，净利率有望从 9% → 12-15%</p>
+
+  <h3>年度投入预算估算</h3>
+  <div class="tbl-wrap"><table>
+    <tr><th>投入项</th><th>年度预算</th><th>说明</th></tr>
+    <tr><td>线上投放</td><td><strong>1,500-2,500 万</strong></td><td>控制在营收 25-30%（Ubras 42% 不可持续）</td></tr>
+    <tr><td>品牌建设</td><td>500-800 万</td><td>重内容/KOL，轻明星代言</td></tr>
+    <tr><td>研发+认证</td><td>300-500 万</td><td>OEKO-Tex / GRS 认证体系</td></tr>
+    <tr><td>人才招募</td><td>300-500 万</td><td>品牌总监+研发工程师+跨境运营</td></tr>
+    <tr><td>跨境基建</td><td>200-350 万</td><td>独立站+海外仓首年搭建</td></tr>
+    <tr><td>经销商升级</td><td>200-400 万</td><td>展厅改造+数字化工具</td></tr>
+    <tr><td><strong>合计</strong></td><td><strong>3,000-5,000 万/年</strong></td><td>约占目标营收 20-33%</td></tr>
+  </table></div>
+
+  <h3>融资判断</h3>
+  <div class="cards">
+    <div class="card"><div class="tag green">3 年目标 1.5 亿</div><h4>不需要外部融资</h4><p>经营利润 + 银行贷款可覆盖年投入 3,000-5,000 万</p></div>
+    <div class="card"><div class="tag purple">5 年目标 5 亿+出海</div><h4>建议 A 轮 3,000-5,000 万</h4><p>PS 2-3x，估值 1.5-3 亿元<br>战投优先：供应链资源 > 渠道资源 > 纯财务</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Section 7: Strategy -->
+<section id="strategy" class="fade-up">
+  <h2><span class="num">7</span> 战略建议总纲</h2>
+  <p class="desc">增长路线图、战略优先级、风险矩阵</p>
+
+  <h3>三阶段增长路线图</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="phase">Phase 1 — 0-12 个月</div>
+      <h4>夯实基础 → 目标 1 亿</h4>
+      <p>线上爆破（抖音自播 + 小红书种草，利用红猫计划红利期）<br>
+      产后线聚焦：打造"医学级产后内裤"爆品<br>
+      认证体系：完成 OEKO-Tex Class I + 关键国标认证<br>
+      经销商数字化：接入企微/会员系统，沉淀私域数据</p>
+    </div>
+    <div class="tl-item">
+      <div class="phase">Phase 2 — 12-24 个月</div>
+      <h4>品类扩张 → 目标 1.2-1.3 亿</h4>
+      <p>品类横向：内裤 → 功能文胸 + 家居服<br>
+      可持续线：推出 GRS 回收系列（成本更低 + 品牌溢价）<br>
+      海外试水：TikTok Shop US 冷启动 + 独立站 MVP<br>
+      私域深耕：会员体系上线，复购率 40% → 50%</p>
+    </div>
+    <div class="tl-item">
+      <div class="phase">Phase 3 — 24-36 个月</div>
+      <h4>全球化 → 目标 1.5 亿+</h4>
+      <p>海外放量：Amazon US + 独立站多语言版<br>
+      DTC 比例提升至 40%+<br>
+      品牌 IP："她概念 = 产后功能内衣"品类等号<br>
+      融资判断：根据增长节奏决定是否引入战略投资</p>
+    </div>
+  </div>
+
+  <h3>战略优先级</h3>
+  <div style="margin:1.5rem 0">
+    <div class="priority-item"><span class="stars">★★★★★</span><div class="pbar"><div class="pfill" style="width:100%"></div></div><span class="plabel">产后功能内衣 = 第一引擎</span></div>
+    <div class="priority-item"><span class="stars">★★★★★</span><div class="pbar"><div class="pfill" style="width:100%"></div></div><span class="plabel">线上渠道爆发</span></div>
+    <div class="priority-item"><span class="stars">★★★★☆</span><div class="pbar"><div class="pfill" style="width:80%"></div></div><span class="plabel">可持续材料线</span></div>
+    <div class="priority-item"><span class="stars">★★★★☆</span><div class="pbar"><div class="pfill" style="width:80%"></div></div><span class="plabel">认证体系构建</span></div>
+    <div class="priority-item"><span class="stars">★★★☆☆</span><div class="pbar"><div class="pfill" style="width:60%"></div></div><span class="plabel">海外 DTC 布局</span></div>
+    <div class="priority-item"><span class="stars">★★★☆☆</span><div class="pbar"><div class="pfill" style="width:60%"></div></div><span class="plabel">经销商体系升级</span></div>
+  </div>
+
+  <h3>风险矩阵</h3>
+  <div class="risk-grid">
+    <div class="risk-cell red">
+      <div class="rlabel">高影响 × 高概率</div>
+      <strong>益生菌量产稳定性不足</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.35rem">→ 用成熟的石墨烯/银离子方案过渡，微胶囊作为 2.0 迭代</p>
+    </div>
+    <div class="risk-cell yellow">
+      <div class="rlabel">中影响 × 高概率</div>
+      <strong>线上营销费率持续上升</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.35rem">→ 控制 ≤25%，重私域复购降低获客依赖</p>
+    </div>
+    <div class="risk-cell orange">
+      <div class="rlabel">中影响 × 中概率</div>
+      <strong>经销商→DTC 渠道冲突</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.35rem">→ 线上专供款差异化，不动存量利益</p>
+    </div>
+    <div class="risk-cell green">
+      <div class="rlabel">低影响 × 低概率</div>
+      <strong>竞品跟进产后赛道</strong>
+      <p style="font-size:.85rem;color:var(--muted);margin-top:.35rem">→ 先发优势 + 认证壁垒 + 专利申请</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Section 8: Tools -->
+<section id="tools" class="fade-up">
+  <h2><span class="num">⚡</span> 配套工具</h2>
+  <p class="desc">点击打开对应的交互式工具页面</p>
+
+  <div class="tool-cards">
+    <a href="slides.html" class="tool-card">
+      <div class="icon">📊</div>
+      <h4>战略演示 PPT</h4>
+      <p>15 页全屏幻灯片，支持键盘/滚轮/触屏翻页。涵盖企业画像、市场机遇、竞争格局、产品矩阵、增长路线图等全部战略内容。</p>
+      <div class="action">打开演示 →</div>
+    </a>
+    <a href="finance.html" class="tool-card">
+      <div class="icon">📈</div>
+      <h4>交互式财务模型</h4>
+      <p>可编辑的三年营收预测 + 利润模型。修改任意数字，毛利润/净利率自动联动计算。含渠道毛利率对比、LTV 模型、融资决策树。</p>
+      <div class="action">打开模型 →</div>
+    </a>
+    <a href="charts.html" class="tool-card">
+      <div class="icon">📉</div>
+      <h4>数据可视化报告</h4>
+      <p>11 个 Chart.js 交互图表：市场规模柱状图、竞品气泡图、消费者环形图、供应链成本图、营收堆叠面积图、财务趋势线等。</p>
+      <div class="action">打开图表 →</div>
+    </a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Data Sources -->
+<section class="fade-up" style="padding-bottom:1rem">
+  <h2><span class="num">📚</span> 核心数据来源</h2>
+  <div style="columns:2;column-gap:2rem;margin-top:1.5rem;font-size:.82rem;color:var(--muted)">
+    <p style="margin-bottom:.5rem">• 前瞻产业研究院 — 中国女士内衣行业全景图谱</p>
+    <p style="margin-bottom:.5rem">• Global Growth Insights — Seamless Underwear Market 2035</p>
+    <p style="margin-bottom:.5rem">• Mordor Intelligence — Shapewear Market Report</p>
+    <p style="margin-bottom:.5rem">• Research and Markets — Maternity Innerwear Market</p>
+    <p style="margin-bottom:.5rem">• 36氪 — 蕉内融资报道</p>
+    <p style="margin-bottom:.5rem">• 腾讯新闻 — Ubras 年入35亿深度报道</p>
+    <p style="margin-bottom:.5rem">• ClickZ — ThirdLove DTC 模型分析</p>
+    <p style="margin-bottom:.5rem">• Latterly — Skims 营销策略 2025</p>
+    <p style="margin-bottom:.5rem">• 艾媒咨询 — 中国内衣行业消费数据</p>
+    <p style="margin-bottom:.5rem">• AMZ123 — 中国内衣品牌出海报告</p>
+    <p style="margin-bottom:.5rem">• UPCounting — eCommerce CAC 2025</p>
+    <p style="margin-bottom:.5rem">• McKinsey / Bain / 尼尔森 — 可持续消费报告</p>
+    <p style="margin-bottom:.5rem">• ChemAnalyst — PLA 价格数据</p>
+    <p style="margin-bottom:.5rem">• 济南圣泉集团年报 — 石墨烯纤维数据</p>
+    <p style="margin-bottom:.5rem">• 中国纺织工业联合会 — 行业标准数据</p>
+  </div>
+</section>
+
+<footer>
+  <p>她概念 She Concept — 品牌战略研究中心 v2.0</p>
+  <p style="margin-top:.35rem">研究日期：2026-03-20 | 研究方法：多源网络深度检索 × 交叉验证 | 机密等级：内部战略文件</p>
+  <p style="margin-top:.35rem">本地访问：<a href="#">#</a> | 端口：<strong>4110</strong></p>
+</footer>
+
+<script>
+// Scroll fade-in animation
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+// Smooth scroll for nav links
+document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

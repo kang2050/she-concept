@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>她概念 She Concept | 品牌战略研究报告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.6);
+    --border: rgba(255, 255, 255, 0.08);
+    --pink: #f472b6;
+    --purple: #818cf8;
+    --green: #34d399;
+    --gold: #fbbf24;
+    --orange: #f97316;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-dim: rgba(255, 255, 255, 0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header */
+  header {
+    padding: 64px 0 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(244, 114, 182, 0.06) 0%, transparent 100%);
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  /* Sections */
+  .section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    background: rgba(244, 114, 182, 0.15);
+    color: var(--pink);
+    font-weight: 500;
+  }
+
+  .section-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+  }
+
+  /* Grid */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+
+  .grid-2-1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+
+  .grid-1-1-1-1 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-2-1, .grid-3 { grid-template-columns: 1fr; }
+    .grid-1-1-1-1 { grid-template-columns: 1fr 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .card:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .card-title {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+  }
+
+  .chart-container canvas {
+    width: 100% !important;
+  }
+
+  /* Data cards */
+  .data-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .data-card:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .data-card .value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .data-card .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* Gantt */
+  .gantt-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 16px;
+  }
+
+  .gantt-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .gantt-bar-track {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    height: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gantt-bar {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Priority bars */
+  .priority-row {
+    margin-bottom: 14px;
+  }
+
+  .priority-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.88rem;
+  }
+
+  .priority-stars {
+    color: var(--gold);
+    font-size: 0.8rem;
+  }
+
+  .priority-track {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    height: 10px;
+    overflow: hidden;
+  }
+
+  .priority-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s ease;
+  }
+
+  /* Risk matrix */
+  .risk-matrix {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr auto;
+    gap: 8px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .risk-matrix .y-label {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-row: 2 / 4;
+    grid-column: 1;
+  }
+
+  .risk-matrix .x-label {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    grid-row: 4;
+    grid-column: 2 / 4;
+  }
+
+  .risk-cell {
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .risk-cell h4 {
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .risk-cell li {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    list-style: none;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .risk-cell li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .risk-high-high {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+    grid-row: 2; grid-column: 3;
+  }
+
+  .risk-high-low {
+    background: rgba(249, 115, 22, 0.12);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    color: #fdba74;
+    grid-row: 2; grid-column: 2;
+  }
+
+  .risk-low-high {
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    color: #fde68a;
+    grid-row: 3; grid-column: 3;
+  }
+
+  .risk-low-low {
+    background: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.18);
+    color: #6ee7b7;
+    grid-row: 3; grid-column: 2;
+  }
+
+  .risk-matrix .corner-label-tl {
+    grid-row: 2; grid-column: 1;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 4px;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+  }
+
+  .risk-matrix .corner-label-bl {
+    grid-row: 3; grid-column: 1;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 4px;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+  }
+
+  /* Footer */
+  footer {
+    padding: 40px 0;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+  }
+
+  footer p { margin-bottom: 4px; }
+
+  /* Utilities */
+  .mt-24 { margin-top: 24px; }
+  .mb-16 { margin-bottom: 16px; }
+  .text-pink { color: var(--pink); }
+  .text-purple { color: var(--purple); }
+  .text-green { color: var(--green); }
+  .text-gold { color: var(--gold); }
+  .text-orange { color: var(--orange); }
+  .fw-700 { font-weight: 700; }
+
+  .full-width { grid-column: 1 / -1; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <h1>她概念 She Concept | 品牌战略研究报告</h1>
+    <p>基于 18 个核心问题的六维度深度研究 | 2026-03-20</p>
+  </div>
+</header>
+
+<!-- SECTION 1: 市场全景 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">市场全景 <span class="badge">Section 1</span></h2>
+    <p class="section-subtitle">全球女性内衣及无缝内衣市场规模与增速对比</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">市场规模对比（2025 vs 2028-2030 预测，亿美元）</div>
+        <div class="chart-container">
+          <canvas id="chart1"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">各细分领域年复合增长率 CAGR（%）</div>
+        <div class="chart-container">
+          <canvas id="chart2"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: 竞品格局 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">竞品格局 <span class="badge">Section 2</span></h2>
+    <p class="section-subtitle">主要竞品营收规模及市场定位矩阵</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">竞品营收对比（亿元人民币）</div>
+        <div class="chart-container">
+          <canvas id="chart3"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">竞品定位矩阵（价格 vs 功能性）</div>
+        <div class="chart-container">
+          <canvas id="chart4"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: 消费者洞察 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">消费者洞察 <span class="badge">Section 3</span></h2>
+    <p class="section-subtitle">产后女性信息来源、信任度与消费行为数据</p>
+
+    <div class="grid-2-1">
+      <div class="grid-2" style="gap:24px;">
+        <div class="card">
+          <div class="card-title">产后女性信息来源</div>
+          <div class="chart-container">
+            <canvas id="chart5"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">内容信任度排序</div>
+          <div class="chart-container">
+            <canvas id="chart6"></canvas>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="data-card">
+          <div class="value text-pink">59-129 元</div>
+          <div class="label">职场女性主力价格带</div>
+        </div>
+        <div class="data-card">
+          <div class="value text-purple">81.9%</div>
+          <div class="label">线上购买偏好</div>
+        </div>
+        <div class="data-card">
+          <div class="value text-gold">4 次 <span style="font-size:0.7em;color:var(--text-muted)">vs 欧美 12 次</span></div>
+          <div class="label">中国年购买频次</div>
+        </div>
+        <div class="data-card">
+          <div class="value text-green">+5-10%</div>
+          <div class="label">可持续溢价意愿（实际）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: 供应链成本 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">供应链成本 <span class="badge">Section 4</span></h2>
+    <p class="section-subtitle">单件产品成本结构与材料溢价分析</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">单件成本 vs 售价 vs 毛利率</div>
+        <div class="chart-container">
+          <canvas id="chart7"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">材料溢价对比（相对原生材料基准 %）</div>
+        <div class="chart-container">
+          <canvas id="chart8"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: 渠道与增长 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">渠道与增长 <span class="badge">Section 5</span></h2>
+    <p class="section-subtitle">三年营收结构变化与增长路线图</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">三年营收结构变化（万元）</div>
+        <div class="chart-container">
+          <canvas id="chart9"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">增长路线图</div>
+        <div style="padding: 8px 0;">
+          <!-- Gantt Chart -->
+          <div style="margin-bottom: 8px; display:grid; grid-template-columns: 160px 1fr; gap:16px;">
+            <div></div>
+            <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-dim); padding: 0 4px;">
+              <span>0 月</span><span>6 月</span><span>12 月</span><span>18 月</span><span>24 月</span><span>30 月</span><span>36 月</span>
+            </div>
+          </div>
+
+          <div class="gantt-row">
+            <div class="gantt-label" style="color:var(--pink);">Phase 1</div>
+            <div class="gantt-bar-track">
+              <div class="gantt-bar" style="left:0; width:33.3%; background: linear-gradient(90deg, var(--pink), rgba(244,114,182,0.6));">
+                夯实基础 &rarr; 1 亿
+              </div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:160px 1fr; gap:16px; margin:-10px 0 16px;">
+            <div></div>
+            <div style="font-size:0.72rem; color:var(--text-muted); padding-left:4px;">线上爆破 / 产后爆品 / 认证体系</div>
+          </div>
+
+          <div class="gantt-row">
+            <div class="gantt-label" style="color:var(--purple);">Phase 2</div>
+            <div class="gantt-bar-track">
+              <div class="gantt-bar" style="left:33.3%; width:33.3%; background: linear-gradient(90deg, var(--purple), rgba(129,140,248,0.6));">
+                品类扩张 &rarr; 1.2-1.3 亿
+              </div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:160px 1fr; gap:16px; margin:-10px 0 16px;">
+            <div></div>
+            <div style="font-size:0.72rem; color:var(--text-muted); padding-left: calc(33.3% + 4px);">横向品类 / 可持续线 / 海外试水</div>
+          </div>
+
+          <div class="gantt-row">
+            <div class="gantt-label" style="color:var(--green);">Phase 3</div>
+            <div class="gantt-bar-track">
+              <div class="gantt-bar" style="left:66.6%; width:33.4%; background: linear-gradient(90deg, var(--green), rgba(52,211,153,0.6));">
+                全球化 &rarr; 1.5 亿+
+              </div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:160px 1fr; gap:16px; margin:-10px 0 0;">
+            <div></div>
+            <div style="font-size:0.72rem; color:var(--text-muted); padding-left: calc(66.6% + 4px);">海外放量 / DTC 40%+ / 品牌IP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: 财务概要 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">财务概要 <span class="badge">Section 6</span></h2>
+    <p class="section-subtitle">毛利率与净利率趋势、关键财务指标</p>
+
+    <div class="grid-2-1">
+      <div class="card">
+        <div class="card-title">综合毛利率与净利率趋势</div>
+        <div class="chart-container">
+          <canvas id="chart11"></canvas>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="data-card">
+          <div class="value"><span class="text-green">54%</span> <span style="font-size:0.7em;color:var(--text-muted)">vs</span> <span class="text-orange">38%</span></div>
+          <div class="label">DTC 毛利率 vs 经销商（+16pp）</div>
+        </div>
+        <div class="data-card">
+          <div class="value text-gold">3,000-5,000 万</div>
+          <div class="label">年投入预算</div>
+        </div>
+        <div class="data-card">
+          <div class="value text-purple">667 元</div>
+          <div class="label">LTV 目标（保守）</div>
+        </div>
+        <div class="data-card">
+          <div class="value text-green">&ge; 3:1</div>
+          <div class="label">LTV:CAC 目标</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: 战略优先级 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">战略优先级 <span class="badge">Section 7</span></h2>
+    <p class="section-subtitle">基于六维度分析的战略行动优先级排序</p>
+
+    <div class="card" style="max-width:800px;">
+      <div class="priority-row">
+        <div class="priority-header">
+          <span>产后功能内衣 = 第一增长引擎</span>
+          <span class="priority-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        </div>
+        <div class="priority-track">
+          <div class="priority-fill" style="width:100%; background: linear-gradient(90deg, var(--pink), rgba(244,114,182,0.5));"></div>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-header">
+          <span>线上渠道爆发</span>
+          <span class="priority-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+        </div>
+        <div class="priority-track">
+          <div class="priority-fill" style="width:100%; background: linear-gradient(90deg, var(--purple), rgba(129,140,248,0.5));"></div>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-header">
+          <span>可持续材料线</span>
+          <span class="priority-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+        </div>
+        <div class="priority-track">
+          <div class="priority-fill" style="width:80%; background: linear-gradient(90deg, var(--green), rgba(52,211,153,0.5));"></div>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-header">
+          <span>认证体系构建</span>
+          <span class="priority-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+        </div>
+        <div class="priority-track">
+          <div class="priority-fill" style="width:80%; background: linear-gradient(90deg, var(--gold), rgba(251,191,36,0.5));"></div>
+        </div>
+      </div>
+      <div class="priority-row">
+        <div class="priority-header">
+          <span>海外 DTC 布局</span>
+          <span class="priority-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+        </div>
+        <div class="priority-track">
+          <div class="priority-fill" style="width:60%; background: linear-gradient(90deg, var(--orange), rgba(249,115,22,0.5));"></div>
+        </div>
+      </div>
+      <div class="priority-row" style="margin-bottom:0;">
+        <div class="priority-header">
+          <span>经销商体系升级</span>
+          <span class="priority-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+        </div>
+        <div class="priority-track">
+          <div class="priority-fill" style="width:60%; background: linear-gradient(90deg, #64748b, rgba(100,116,139,0.5));"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: 风险矩阵 -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">风险矩阵 <span class="badge">Section 8</span></h2>
+    <p class="section-subtitle">影响程度 x 发生概率 四象限风险评估</p>
+
+    <div class="card" style="max-width:800px; margin:0 auto;">
+      <div class="risk-matrix">
+        <!-- Y axis label -->
+        <div class="y-label">影响程度 &rarr;</div>
+
+        <!-- Top-left: high impact, low probability -->
+        <div class="risk-cell risk-high-low">
+          <h4>高影响 / 低概率</h4>
+          <ul>
+            <li>竞品跟进产后赛道</li>
+          </ul>
+        </div>
+
+        <!-- Top-right: high impact, high probability -->
+        <div class="risk-cell risk-high-high">
+          <h4>高影响 / 高概率</h4>
+          <ul>
+            <li>益生菌量产稳定性</li>
+          </ul>
+        </div>
+
+        <!-- Bottom-left: low impact, low probability -->
+        <div class="risk-cell risk-low-low">
+          <h4>低影响 / 低概率</h4>
+          <ul>
+            <li>海外 CAC 过高</li>
+          </ul>
+        </div>
+
+        <!-- Bottom-right: low impact, high probability -->
+        <div class="risk-cell risk-low-high">
+          <h4>低影响 / 高概率</h4>
+          <ul>
+            <li>营销费率上升</li>
+            <li>渠道冲突</li>
+          </ul>
+        </div>
+
+        <!-- X axis label -->
+        <div class="x-label">发生概率 &rarr;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>数据来源：多源网络深度检索 &times; 交叉验证</p>
+    <p>她概念 She Concept | 品牌战略研究报告 v2.0 | 2026-03-20</p>
+  </div>
+</footer>
+
+<script>
+// ========== Chart.js Global Config ==========
+Chart.defaults.color = 'rgba(255,255,255,0.6)';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif';
+
+const PINK = '#f472b6';
+const PURPLE = '#818cf8';
+const GREEN = '#34d399';
+const GOLD = '#fbbf24';
+const ORANGE = '#f97316';
+
+const gridColor = 'rgba(255,255,255,0.08)';
+const tickColor = 'rgba(255,255,255,0.5)';
+
+// ========== Chart 1: Market Size Comparison ==========
+new Chart(document.getElementById('chart1'), {
+  type: 'bar',
+  data: {
+    labels: ['中国女性内衣', '全球无缝内衣', '全球孕产内衣', '全球塑形衣'],
+    datasets: [
+      {
+        label: '2025 年（亿美元）',
+        data: [250, 486, 88, 25],
+        backgroundColor: 'rgba(244,114,182,0.7)',
+        borderColor: PINK,
+        borderWidth: 1,
+        borderRadius: 4,
+      },
+      {
+        label: '2028-2030 预测（亿美元）',
+        data: [370, 567, 139, 32],
+        backgroundColor: 'rgba(129,140,248,0.7)',
+        borderColor: PURPLE,
+        borderWidth: 1,
+        borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { position: 'top', labels: { padding: 16, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: {
+        callbacks: {
+          afterBody: function(context) {
+            const cagrs = ['8.2%', '8.0%', '9.6%', '10.0%'];
+            return 'CAGR: ' + cagrs[context[0].dataIndex];
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor } },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor }, beginAtZero: true }
+    }
+  }
+});
+
+// ========== Chart 2: Radar CAGR ==========
+new Chart(document.getElementById('chart2'), {
+  type: 'radar',
+  data: {
+    labels: ['整体内衣\n8.2%', '无缝内衣\n8.0%', '孕产内衣\n9.6%', '产后塑形\n10.0%', '可持续内衣\n31% YoY', '全球亲密服饰\n5.3%'],
+    datasets: [{
+      label: 'CAGR (%)',
+      data: [8.2, 8.0, 9.6, 10.0, 31, 5.3],
+      backgroundColor: 'rgba(244,114,182,0.15)',
+      borderColor: PINK,
+      borderWidth: 2,
+      pointBackgroundColor: [PINK, PURPLE, GOLD, ORANGE, GREEN, '#64748b'],
+      pointBorderColor: '#fff',
+      pointRadius: 5,
+      pointHoverRadius: 7
+    }]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      r: {
+        beginAtZero: true,
+        grid: { color: 'rgba(255,255,255,0.1)' },
+        angleLines: { color: 'rgba(255,255,255,0.08)' },
+        pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 11 } },
+        ticks: { color: 'rgba(255,255,255,0.4)', backdropColor: 'transparent' }
+      }
+    }
+  }
+});
+
+// ========== Chart 3: Competitor Revenue ==========
+new Chart(document.getElementById('chart3'), {
+  type: 'bar',
+  data: {
+    labels: ['Skims', 'Ubras', 'NEIWAI', '蕉内', 'ThirdLove', '她概念'],
+    datasets: [{
+      label: '营收（亿元）',
+      data: [75, 35, 24, 19, 5, 0.7],
+      backgroundColor: [
+        'rgba(129,140,248,0.6)',
+        'rgba(129,140,248,0.6)',
+        'rgba(129,140,248,0.6)',
+        'rgba(129,140,248,0.6)',
+        'rgba(129,140,248,0.6)',
+        'rgba(244,114,182,0.85)',
+      ],
+      borderColor: [
+        PURPLE, PURPLE, PURPLE, PURPLE, PURPLE, PINK
+      ],
+      borderWidth: [1, 1, 1, 1, 1, 2],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            return ctx.raw + ' 亿元';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor }, beginAtZero: true },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { weight: function(ctx) { return ctx.tick.label === '她概念' ? 'bold' : 'normal'; } } } }
+    }
+  }
+});
+
+// ========== Chart 4: Competitor Positioning Bubble ==========
+new Chart(document.getElementById('chart4'), {
+  type: 'bubble',
+  data: {
+    datasets: [
+      { label: '蕉内', data: [{ x: 65, y: 55, r: 14 }], backgroundColor: 'rgba(129,140,248,0.6)', borderColor: PURPLE, borderWidth: 1 },
+      { label: 'Ubras', data: [{ x: 50, y: 35, r: 16 }], backgroundColor: 'rgba(251,191,36,0.5)', borderColor: GOLD, borderWidth: 1 },
+      { label: 'NEIWAI', data: [{ x: 65, y: 50, r: 15 }], backgroundColor: 'rgba(52,211,153,0.5)', borderColor: GREEN, borderWidth: 1 },
+      { label: 'Skims', data: [{ x: 85, y: 80, r: 22 }], backgroundColor: 'rgba(249,115,22,0.5)', borderColor: ORANGE, borderWidth: 1 },
+      { label: 'ThirdLove', data: [{ x: 70, y: 55, r: 8 }], backgroundColor: 'rgba(100,116,139,0.5)', borderColor: '#94a3b8', borderWidth: 1 },
+      { label: '她概念', data: [{ x: 50, y: 75, r: 7 }], backgroundColor: 'rgba(244,114,182,0.75)', borderColor: PINK, borderWidth: 2 },
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle' } },
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            return ctx.dataset.label + '  价格:' + ctx.raw.x + '  功能:' + ctx.raw.y;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: '价格定位 (低 → 高)', color: tickColor },
+        min: 20, max: 100,
+        grid: { color: gridColor }, ticks: { color: tickColor }
+      },
+      y: {
+        title: { display: true, text: '功能性 (低 → 高)', color: tickColor },
+        min: 20, max: 100,
+        grid: { color: gridColor }, ticks: { color: tickColor }
+      }
+    }
+  }
+});
+
+// ========== Chart 5: Info Source Pie ==========
+new Chart(document.getElementById('chart5'), {
+  type: 'doughnut',
+  data: {
+    labels: ['微信朋友圈 41%', '小红书 28%', '其他社交/搜索 31%'],
+    datasets: [{
+      data: [41, 28, 31],
+      backgroundColor: [PINK, PURPLE, 'rgba(100,116,139,0.6)'],
+      borderColor: 'rgba(15,23,42,0.8)',
+      borderWidth: 3
+    }]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    cutout: '50%',
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true, pointStyle: 'circle' } }
+    }
+  }
+});
+
+// ========== Chart 6: Trust Pie ==========
+new Chart(document.getElementById('chart6'), {
+  type: 'doughnut',
+  data: {
+    labels: ['真实妈妈分享 52%', '母婴专家/医生 23%', '时尚博主 14%', '品牌广告 7%', '明星推荐 4%'],
+    datasets: [{
+      data: [52, 23, 14, 7, 4],
+      backgroundColor: [PINK, PURPLE, GREEN, GOLD, 'rgba(100,116,139,0.5)'],
+      borderColor: 'rgba(15,23,42,0.8)',
+      borderWidth: 3
+    }]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    cutout: '50%',
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 10, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } } }
+    }
+  }
+});
+
+// ========== Chart 7: Cost vs Price vs Margin ==========
+const chart7Ctx = document.getElementById('chart7');
+new Chart(chart7Ctx, {
+  type: 'bar',
+  data: {
+    labels: ['普通款', '石墨烯款', '益生菌款', '可持续款'],
+    datasets: [
+      {
+        label: '成本（元）',
+        data: [20, 28, 34, 24],
+        backgroundColor: 'rgba(100,116,139,0.7)',
+        borderColor: '#64748b',
+        borderWidth: 1,
+        borderRadius: 4,
+        order: 2
+      },
+      {
+        label: '售价（元）',
+        data: [69, 134, 159, 104],
+        backgroundColor: 'rgba(244,114,182,0.6)',
+        borderColor: PINK,
+        borderWidth: 1,
+        borderRadius: 4,
+        order: 2
+      },
+      {
+        label: '毛利率（%）',
+        data: [63, 68, 68, 63],
+        type: 'line',
+        borderColor: GREEN,
+        backgroundColor: 'rgba(52,211,153,0.1)',
+        pointBackgroundColor: GREEN,
+        pointBorderColor: '#fff',
+        pointRadius: 5,
+        borderWidth: 2,
+        yAxisID: 'y1',
+        order: 1
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { position: 'top', labels: { padding: 14, usePointStyle: true, pointStyle: 'rectRounded' } }
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor } },
+      y: {
+        grid: { color: gridColor }, ticks: { color: tickColor }, beginAtZero: true,
+        title: { display: true, text: '元', color: tickColor }
+      },
+      y1: {
+        position: 'right',
+        grid: { drawOnChartArea: false },
+        ticks: { color: GREEN, callback: v => v + '%' },
+        min: 0, max: 100,
+        title: { display: true, text: '毛利率 %', color: GREEN }
+      }
+    }
+  }
+});
+
+// ========== Chart 8: Material Premium ==========
+new Chart(document.getElementById('chart8'), {
+  type: 'bar',
+  data: {
+    labels: ['GRS 回收锦纶', 'ECONYL 再生尼龙', '石墨烯锦纶', '益生菌微胶囊', '兰精莫代尔', 'PLA 聚乳酸'],
+    datasets: [{
+      label: '溢价 (%)',
+      data: [-20, 40, 65, 60, 60, 275],
+      backgroundColor: function(ctx) {
+        return ctx.raw < 0 ? 'rgba(52,211,153,0.7)' : 'rgba(249,115,22,0.6)';
+      },
+      borderColor: function(ctx) {
+        return ctx.raw < 0 ? GREEN : ORANGE;
+      },
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { display: false },
+      annotation: {}
+    },
+    scales: {
+      x: {
+        grid: { color: function(ctx) { return ctx.tick.value === 0 ? 'rgba(255,255,255,0.4)' : gridColor; } },
+        ticks: {
+          color: tickColor,
+          callback: function(v) { return (v > 0 ? '+' : '') + v + '%'; }
+        },
+        title: { display: true, text: '相对原生材料基准', color: tickColor }
+      },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor } }
+    }
+  }
+});
+
+// ========== Chart 9: Revenue Structure Stacked Area ==========
+new Chart(document.getElementById('chart9'), {
+  type: 'line',
+  data: {
+    labels: ['Year 0\n6,700万', 'Year 1\n9,400万', 'Year 2\n1.23亿', 'Year 3\n1.5亿'],
+    datasets: [
+      {
+        label: '经销商',
+        data: [5600, 5800, 5500, 5000],
+        backgroundColor: 'rgba(100,116,139,0.4)',
+        borderColor: '#64748b',
+        borderWidth: 1.5,
+        fill: true, tension: 0.3, pointRadius: 4
+      },
+      {
+        label: '线上 DTC',
+        data: [800, 2500, 4000, 5500],
+        backgroundColor: 'rgba(244,114,182,0.35)',
+        borderColor: PINK,
+        borderWidth: 1.5,
+        fill: true, tension: 0.3, pointRadius: 4
+      },
+      {
+        label: '私域会员',
+        data: [300, 800, 1500, 2000],
+        backgroundColor: 'rgba(129,140,248,0.3)',
+        borderColor: PURPLE,
+        borderWidth: 1.5,
+        fill: true, tension: 0.3, pointRadius: 4
+      },
+      {
+        label: '海外 DTC',
+        data: [0, 200, 800, 1500],
+        backgroundColor: 'rgba(52,211,153,0.3)',
+        borderColor: GREEN,
+        borderWidth: 1.5,
+        fill: true, tension: 0.3, pointRadius: 4
+      },
+      {
+        label: '海外平台',
+        data: [0, 100, 500, 1000],
+        backgroundColor: 'rgba(251,191,36,0.25)',
+        borderColor: GOLD,
+        borderWidth: 1.5,
+        fill: true, tension: 0.3, pointRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1400, easing: 'easeOutQuart' },
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true, pointStyle: 'rectRounded' } },
+      tooltip: {
+        callbacks: {
+          footer: function(items) {
+            let total = 0;
+            items.forEach(i => total += i.raw);
+            return '总计: ' + total.toLocaleString() + ' 万';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor } },
+      y: {
+        stacked: true,
+        grid: { color: gridColor },
+        ticks: { color: tickColor, callback: v => (v / 10000).toFixed(1) + ' 亿' },
+        title: { display: true, text: '万元', color: tickColor }
+      }
+    }
+  }
+});
+
+// ========== Chart 11: Margin Trend ==========
+new Chart(document.getElementById('chart11'), {
+  type: 'line',
+  data: {
+    labels: ['Year 0', 'Year 1', 'Year 2', 'Year 3'],
+    datasets: [
+      {
+        label: '综合毛利率',
+        data: [42, 48, 52, 55],
+        borderColor: PINK,
+        backgroundColor: 'rgba(244,114,182,0.1)',
+        borderWidth: 2.5,
+        pointBackgroundColor: PINK,
+        pointBorderColor: '#fff',
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        fill: true,
+        tension: 0.3
+      },
+      {
+        label: '净利率',
+        data: [9, 10, 12, 14],
+        borderColor: GREEN,
+        backgroundColor: 'rgba(52,211,153,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: GREEN,
+        pointBorderColor: '#fff',
+        pointRadius: 6,
+        pointHoverRadius: 8,
+        fill: true,
+        tension: 0.3
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    animation: { duration: 1200, easing: 'easeOutQuart' },
+    plugins: {
+      legend: { position: 'top', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            return ctx.dataset.label + ': ' + ctx.raw + '%';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor } },
+      y: {
+        grid: { color: gridColor },
+        ticks: { color: tickColor, callback: v => v + '%' },
+        min: 0, max: 60,
+        title: { display: true, text: '%', color: tickColor }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

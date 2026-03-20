@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>她概念 | 财务模型 — 7000万→1.5亿增长路径</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0f172a;--bg2:#1e293b;--bg3:#334155;
+    --pink:#f472b6;--purple:#818cf8;--green:#34d399;
+    --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+    --white05:rgba(255,255,255,0.03);--white10:rgba(255,255,255,0.06);
+    --radius:12px;
+  }
+  html{font-size:14px;scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;line-height:1.6;padding:0 0 60px}
+
+  /* scrollbar */
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
+
+  /* layout */
+  .container{max-width:1280px;margin:0 auto;padding:0 24px}
+  header{padding:40px 0 24px;text-align:center}
+  header h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  header p{color:var(--text2);margin-top:6px;font-size:.95rem}
+
+  section{margin-top:40px}
+  section h2{font-size:1.25rem;font-weight:600;color:var(--pink);margin-bottom:16px;padding-left:12px;border-left:3px solid var(--pink)}
+
+  /* cards row */
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:24px;text-align:center;transition:transform .2s}
+  .card:hover{transform:translateY(-2px)}
+  .card .label{font-size:.85rem;color:var(--text2);margin-bottom:8px}
+  .card .value{font-size:1.8rem;font-weight:700}
+  .card .sub{font-size:.8rem;color:var(--text3);margin-top:4px}
+  .card.pink .value{color:var(--pink)}
+  .card.purple .value{color:var(--purple)}
+  .card.green .value{color:var(--green)}
+
+  /* tables */
+  .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.06)}
+  table{width:100%;border-collapse:collapse;min-width:700px}
+  th,td{padding:10px 14px;text-align:right;font-size:.9rem;white-space:nowrap}
+  th{background:rgba(255,255,255,0.04);color:var(--text2);font-weight:600;position:sticky;top:0}
+  th:first-child,td:first-child{text-align:left;font-weight:500}
+  tr:nth-child(odd) td{background:var(--white05)}
+  tr:nth-child(even) td{background:var(--white10)}
+  tr.total td{font-weight:700;color:var(--pink);background:rgba(244,114,182,0.08)!important;border-top:1px solid rgba(244,114,182,0.3)}
+  tr.growth td{color:var(--green);font-style:italic}
+
+  td input{
+    background:transparent;border:1px solid transparent;color:var(--text);text-align:right;
+    font-size:.9rem;font-family:inherit;padding:4px 6px;width:90px;border-radius:4px;
+    transition:border-color .2s;
+  }
+  td input:hover{border-color:var(--bg3)}
+  td input:focus{outline:none;border-color:var(--pink);background:rgba(244,114,182,0.06)}
+  td.auto{color:var(--purple);font-weight:600}
+  td.auto-green{color:var(--green);font-weight:600}
+
+  .note{font-size:.75rem;color:var(--text3);margin-top:8px}
+
+  /* bar chart */
+  .bar-chart{display:flex;flex-direction:column;gap:14px;max-width:600px}
+  .bar-row{display:flex;align-items:center;gap:12px}
+  .bar-label{width:160px;text-align:right;font-size:.85rem;color:var(--text2);flex-shrink:0}
+  .bar-track{flex:1;height:28px;background:rgba(255,255,255,0.04);border-radius:6px;position:relative;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.8rem;font-weight:600;color:#fff;transition:width .6s ease}
+
+  /* donut / ring chart via CSS conic-gradient */
+  .ring-wrap{display:flex;align-items:center;gap:40px;flex-wrap:wrap}
+  .ring{width:220px;height:220px;border-radius:50%;position:relative;flex-shrink:0}
+  .ring::after{content:'';position:absolute;top:30px;left:30px;width:160px;height:160px;background:var(--bg);border-radius:50%}
+  .ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;text-align:center}
+  .ring-center .rc-val{font-size:1.4rem;font-weight:700;color:var(--pink)}
+  .ring-center .rc-label{font-size:.75rem;color:var(--text3)}
+  .ring-legend{display:flex;flex-direction:column;gap:8px}
+  .ring-legend .leg{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text2)}
+  .leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+
+  /* product cards */
+  .prod-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .prod-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:20px}
+  .prod-card h3{font-size:1rem;font-weight:600;margin-bottom:12px}
+  .prod-card .prod-row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--text2);padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .prod-card .prod-row:last-child{border-bottom:none}
+  .prod-card .prod-row span:last-child{color:var(--green);font-weight:600}
+
+  /* LTV compare */
+  .ltv-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .ltv-box{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:24px}
+  .ltv-box h3{font-size:1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .ltv-box h3 span.tag{font-size:.7rem;padding:2px 8px;border-radius:4px;font-weight:500}
+  .tag-conservative{background:rgba(129,140,248,0.15);color:var(--purple)}
+  .tag-optimistic{background:rgba(52,211,153,0.15);color:var(--green)}
+  .ltv-row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--text2);padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .ltv-row:last-child{border-bottom:none}
+  .ltv-row.highlight{color:var(--pink);font-weight:600;font-size:.95rem}
+
+  /* decision tree */
+  .decision{display:flex;flex-direction:column;gap:16px;max-width:800px}
+  .dec-node{background:var(--bg2);border-left:3px solid var(--pink);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;position:relative}
+  .dec-node::before{content:'';position:absolute;left:-3px;top:0;bottom:0;width:3px;border-radius:2px}
+  .dec-node.n1::before{background:var(--green)}
+  .dec-node.n1{border-left-color:var(--green)}
+  .dec-node.n2::before{background:var(--purple)}
+  .dec-node.n2{border-left-color:var(--purple)}
+  .dec-node.n3::before{background:var(--pink)}
+  .dec-node.n3{border-left-color:var(--pink)}
+  .dec-q{font-weight:600;color:var(--text);margin-bottom:4px}
+  .dec-a{font-size:.9rem;color:var(--text2)}
+
+  /* footer */
+  footer{margin-top:60px;text-align:center;padding:20px;color:var(--text3);font-size:.75rem;border-top:1px solid rgba(255,255,255,0.06)}
+
+  /* responsive */
+  @media(max-width:900px){
+    .cards,.prod-cards{grid-template-columns:repeat(2,1fr)}
+    .ltv-grid{grid-template-columns:1fr}
+    .ring-wrap{flex-direction:column;align-items:flex-start}
+  }
+  @media(max-width:600px){
+    .cards,.prod-cards{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>她概念 | 财务增长模型</h1>
+    <p>女性无缝内裤品牌 — 从 7,000 万到 1.5 亿的增长路径</p>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- 1. Dashboard Cards -->
+<section>
+  <h2>核心指标仪表盘</h2>
+  <div class="cards">
+    <div class="card pink">
+      <div class="label">当前营收</div>
+      <div class="value">&#165;7,000<span style="font-size:.9rem;font-weight:400">万</span></div>
+      <div class="sub">Year 0 基准</div>
+    </div>
+    <div class="card purple">
+      <div class="label">目标营收</div>
+      <div class="value">&#165;15,000<span style="font-size:.9rem;font-weight:400">万</span></div>
+      <div class="sub">Year 3 目标</div>
+    </div>
+    <div class="card green">
+      <div class="label">增长缺口</div>
+      <div class="value" id="dash-gap">&#165;8,000<span style="font-size:.9rem;font-weight:400">万</span></div>
+      <div class="sub">+114% 增长空间</div>
+    </div>
+    <div class="card">
+      <div class="label">当前净利率</div>
+      <div class="value" style="color:var(--green)">9%</div>
+      <div class="sub">Year 0 基准</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. Revenue Forecast -->
+<section>
+  <h2>三年营收预测（可编辑）</h2>
+  <div class="table-wrap">
+    <table id="revTable">
+      <thead>
+        <tr><th>渠道</th><th>Year 0（当前）</th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>国内经销商营收</td>
+          <td><input type="number" class="rev" data-row="dealer" data-col="0" value="5600"></td>
+          <td><input type="number" class="rev" data-row="dealer" data-col="1" value="5800"></td>
+          <td><input type="number" class="rev" data-row="dealer" data-col="2" value="5500"></td>
+          <td><input type="number" class="rev" data-row="dealer" data-col="3" value="5000"></td>
+        </tr>
+        <tr>
+          <td>国内线上DTC营收</td>
+          <td><input type="number" class="rev" data-row="dtc" data-col="0" value="800"></td>
+          <td><input type="number" class="rev" data-row="dtc" data-col="1" value="2500"></td>
+          <td><input type="number" class="rev" data-row="dtc" data-col="2" value="4000"></td>
+          <td><input type="number" class="rev" data-row="dtc" data-col="3" value="5500"></td>
+        </tr>
+        <tr>
+          <td>国内私域/会员营收</td>
+          <td><input type="number" class="rev" data-row="member" data-col="0" value="300"></td>
+          <td><input type="number" class="rev" data-row="member" data-col="1" value="800"></td>
+          <td><input type="number" class="rev" data-row="member" data-col="2" value="1500"></td>
+          <td><input type="number" class="rev" data-row="member" data-col="3" value="2000"></td>
+        </tr>
+        <tr>
+          <td>海外DTC营收</td>
+          <td><input type="number" class="rev" data-row="overseas_dtc" data-col="0" value="0"></td>
+          <td><input type="number" class="rev" data-row="overseas_dtc" data-col="1" value="200"></td>
+          <td><input type="number" class="rev" data-row="overseas_dtc" data-col="2" value="800"></td>
+          <td><input type="number" class="rev" data-row="overseas_dtc" data-col="3" value="1500"></td>
+        </tr>
+        <tr>
+          <td>海外平台（Amazon/TikTok）</td>
+          <td><input type="number" class="rev" data-row="overseas_platform" data-col="0" value="0"></td>
+          <td><input type="number" class="rev" data-row="overseas_platform" data-col="1" value="100"></td>
+          <td><input type="number" class="rev" data-row="overseas_platform" data-col="2" value="500"></td>
+          <td><input type="number" class="rev" data-row="overseas_platform" data-col="3" value="1000"></td>
+        </tr>
+        <tr class="total">
+          <td>总营收（万元）</td>
+          <td class="auto" id="rev-total-0">—</td>
+          <td class="auto" id="rev-total-1">—</td>
+          <td class="auto" id="rev-total-2">—</td>
+          <td class="auto" id="rev-total-3">—</td>
+        </tr>
+        <tr class="growth">
+          <td>同比增长率</td>
+          <td>—</td>
+          <td class="auto-green" id="rev-growth-1">—</td>
+          <td class="auto-green" id="rev-growth-2">—</td>
+          <td class="auto-green" id="rev-growth-3">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">* 底稿称 7,000 万，此处分渠道后微调为示意值。点击数字可直接编辑，计算自动更新。</p>
+</section>
+
+<!-- 3. Profit Model -->
+<section>
+  <h2>利润模型</h2>
+  <div class="table-wrap">
+    <table id="profitTable">
+      <thead>
+        <tr><th>指标</th><th>Year 0</th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr>
+      </thead>
+      <tbody>
+        <tr class="total">
+          <td>总营收（万元）</td>
+          <td class="auto" id="p-rev-0">—</td>
+          <td class="auto" id="p-rev-1">—</td>
+          <td class="auto" id="p-rev-2">—</td>
+          <td class="auto" id="p-rev-3">—</td>
+        </tr>
+        <tr>
+          <td>综合毛利率</td>
+          <td><input type="number" class="profit-in" data-row="gm" data-col="0" value="42" step="1">%</td>
+          <td><input type="number" class="profit-in" data-row="gm" data-col="1" value="48" step="1">%</td>
+          <td><input type="number" class="profit-in" data-row="gm" data-col="2" value="52" step="1">%</td>
+          <td><input type="number" class="profit-in" data-row="gm" data-col="3" value="55" step="1">%</td>
+        </tr>
+        <tr>
+          <td>毛利润（万元）</td>
+          <td class="auto-green" id="p-gp-0">—</td>
+          <td class="auto-green" id="p-gp-1">—</td>
+          <td class="auto-green" id="p-gp-2">—</td>
+          <td class="auto-green" id="p-gp-3">—</td>
+        </tr>
+        <tr>
+          <td>营销费用（占营收%）</td>
+          <td><input type="number" class="profit-in" data-row="mkt" data-col="0" value="15" step="1">%</td>
+          <td><input type="number" class="profit-in" data-row="mkt" data-col="1" value="25" step="1">%</td>
+          <td><input type="number" class="profit-in" data-row="mkt" data-col="2" value="23" step="1">%</td>
+          <td><input type="number" class="profit-in" data-row="mkt" data-col="3" value="20" step="1">%</td>
+        </tr>
+        <tr>
+          <td>研发投入（万元）</td>
+          <td><input type="number" class="profit-in" data-row="rd" data-col="0" value="200"></td>
+          <td><input type="number" class="profit-in" data-row="rd" data-col="1" value="400"></td>
+          <td><input type="number" class="profit-in" data-row="rd" data-col="2" value="500"></td>
+          <td><input type="number" class="profit-in" data-row="rd" data-col="3" value="500"></td>
+        </tr>
+        <tr>
+          <td>人力成本（万元）</td>
+          <td><input type="number" class="profit-in" data-row="hr" data-col="0" value="500"></td>
+          <td><input type="number" class="profit-in" data-row="hr" data-col="1" value="800"></td>
+          <td><input type="number" class="profit-in" data-row="hr" data-col="2" value="1000"></td>
+          <td><input type="number" class="profit-in" data-row="hr" data-col="3" value="1200"></td>
+        </tr>
+        <tr>
+          <td>运营/管理费用（万元）</td>
+          <td><input type="number" class="profit-in" data-row="ops" data-col="0" value="300"></td>
+          <td><input type="number" class="profit-in" data-row="ops" data-col="1" value="400"></td>
+          <td><input type="number" class="profit-in" data-row="ops" data-col="2" value="500"></td>
+          <td><input type="number" class="profit-in" data-row="ops" data-col="3" value="600"></td>
+        </tr>
+        <tr>
+          <td>跨境基建（万元）</td>
+          <td><input type="number" class="profit-in" data-row="cross" data-col="0" value="0"></td>
+          <td><input type="number" class="profit-in" data-row="cross" data-col="1" value="200"></td>
+          <td><input type="number" class="profit-in" data-row="cross" data-col="2" value="150"></td>
+          <td><input type="number" class="profit-in" data-row="cross" data-col="3" value="100"></td>
+        </tr>
+        <tr class="total">
+          <td>营业利润（万元）</td>
+          <td class="auto" id="p-op-0">—</td>
+          <td class="auto" id="p-op-1">—</td>
+          <td class="auto" id="p-op-2">—</td>
+          <td class="auto" id="p-op-3">—</td>
+        </tr>
+        <tr class="total">
+          <td>净利率</td>
+          <td class="auto" id="p-nm-0">—</td>
+          <td class="auto" id="p-nm-1">—</td>
+          <td class="auto" id="p-nm-2">—</td>
+          <td class="auto" id="p-nm-3">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">DTC 占比提升带动综合毛利率逐年改善。可编辑费用参数，利润自动计算。</p>
+</section>
+
+<!-- 4. Channel Margin Comparison -->
+<section>
+  <h2>渠道毛利率对比</h2>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <div class="bar-label">直营DTC</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:54%;background:linear-gradient(90deg,var(--green),#6ee7b7)">54%</div>
+      </div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">线上电商（天猫/抖音）</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:40%;background:linear-gradient(90deg,var(--purple),#a5b4fc)">40%</div>
+      </div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">经销商</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:38%;background:linear-gradient(90deg,var(--bg3),#64748b)">38%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Budget Allocation -->
+<section>
+  <h2>投入预算分配</h2>
+  <div class="ring-wrap">
+    <div class="ring" id="budgetRing" style="background:conic-gradient(
+      #f472b6 0% 35%,
+      #818cf8 35% 53%,
+      #34d399 53% 65%,
+      #fbbf24 65% 75%,
+      #f87171 75% 83%,
+      #60a5fa 83% 90%,
+      #a78bfa 90% 100%
+    )">
+      <div class="ring-center">
+        <div class="rc-val">100%</div>
+        <div class="rc-label">总预算</div>
+      </div>
+    </div>
+    <div class="ring-legend">
+      <div class="leg"><div class="leg-dot" style="background:#f472b6"></div>线上投放 35%</div>
+      <div class="leg"><div class="leg-dot" style="background:#818cf8"></div>品牌建设 18%</div>
+      <div class="leg"><div class="leg-dot" style="background:#34d399"></div>人才招募 12%</div>
+      <div class="leg"><div class="leg-dot" style="background:#fbbf24"></div>研发认证 10%</div>
+      <div class="leg"><div class="leg-dot" style="background:#f87171"></div>跨境基建 8%</div>
+      <div class="leg"><div class="leg-dot" style="background:#60a5fa"></div>经销商升级 7%</div>
+      <div class="leg"><div class="leg-dot" style="background:#a78bfa"></div>运营管理 10%</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Unit Economics -->
+<section>
+  <h2>单品经济模型</h2>
+  <div class="prod-cards">
+    <div class="prod-card">
+      <h3 style="color:var(--pink)">普通款</h3>
+      <div class="prod-row"><span>成本区间</span><span>15 - 24 元</span></div>
+      <div class="prod-row"><span>售价区间</span><span>49 - 89 元</span></div>
+      <div class="prod-row"><span>毛利率</span><span>55 - 70%</span></div>
+    </div>
+    <div class="prod-card">
+      <h3 style="color:var(--purple)">石墨烯款</h3>
+      <div class="prod-row"><span>成本区间</span><span>21 - 34 元</span></div>
+      <div class="prod-row"><span>售价区间</span><span>99 - 169 元</span></div>
+      <div class="prod-row"><span>毛利率</span><span>60 - 75%</span></div>
+    </div>
+    <div class="prod-card">
+      <h3 style="color:var(--green)">益生菌款</h3>
+      <div class="prod-row"><span>成本区间</span><span>26 - 42 元</span></div>
+      <div class="prod-row"><span>售价区间</span><span>119 - 199 元</span></div>
+      <div class="prod-row"><span>毛利率</span><span>60 - 75%</span></div>
+    </div>
+    <div class="prod-card">
+      <h3 style="color:#fbbf24">可持续款</h3>
+      <div class="prod-row"><span>成本区间</span><span>19 - 29 元</span></div>
+      <div class="prod-row"><span>售价区间</span><span>79 - 129 元</span></div>
+      <div class="prod-row"><span>毛利率</span><span>55 - 70%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. LTV Model -->
+<section>
+  <h2>客户生命周期价值（LTV）模型</h2>
+  <div class="ltv-grid">
+    <div class="ltv-box">
+      <h3>保守场景 <span class="tag tag-conservative">Conservative</span></h3>
+      <div class="ltv-row"><span>年购买频次</span><span>3 次</span></div>
+      <div class="ltv-row"><span>平均客单价</span><span>&#165;89</span></div>
+      <div class="ltv-row"><span>年留存率</span><span>40%</span></div>
+      <div class="ltv-row"><span>客户生命周期</span><span>2.5 年</span></div>
+      <div class="ltv-row highlight"><span>LTV</span><span>&#165;667</span></div>
+      <div class="ltv-row highlight"><span>目标 CAC (&le;LTV/3)</span><span>&le; &#165;222</span></div>
+    </div>
+    <div class="ltv-box">
+      <h3>乐观场景 <span class="tag tag-optimistic">Optimistic</span></h3>
+      <div class="ltv-row"><span>年购买频次</span><span>6 次</span></div>
+      <div class="ltv-row"><span>平均客单价</span><span>&#165;129</span></div>
+      <div class="ltv-row"><span>年留存率</span><span>60%</span></div>
+      <div class="ltv-row"><span>客户生命周期</span><span>4 年</span></div>
+      <div class="ltv-row highlight"><span>LTV</span><span>&#165;3,096</span></div>
+      <div class="ltv-row highlight"><span>目标 CAC (&le;LTV/3)</span><span>&le; &#165;1,032</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Financing Decision -->
+<section>
+  <h2>融资判断决策树</h2>
+  <div class="decision">
+    <div class="dec-node n1">
+      <div class="dec-q">场景 A：3 年目标仅 1.5 亿？</div>
+      <div class="dec-a">&#10003; 不需外部融资 — 经营利润 + 银行贷款可覆盖投入，保持控制权。</div>
+    </div>
+    <div class="dec-node n2">
+      <div class="dec-q">场景 B：5 年目标 5 亿 + 出海扩张？</div>
+      <div class="dec-a">&#10148; 建议 A 轮融资 3,000 - 5,000 万（PS 2-3x，估值 1.5 - 3 亿）。用途：品牌出海基建、供应链升级、DTC 技术团队。</div>
+    </div>
+    <div class="dec-node n3">
+      <div class="dec-q">战投优先方向</div>
+      <div class="dec-a">供应链资源 &gt; 渠道资源 &gt; 纯财务投资 — 优先引入能带来产业协同的战略投资者。</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  她概念财务模型 v1.0 &nbsp;|&nbsp; 2026-03-20 &nbsp;|&nbsp; 数据基于战略研究报告 v2.0
+</footer>
+
+<script>
+(function(){
+  // ---- helpers ----
+  function fmt(n){ return n.toLocaleString('zh-CN',{maximumFractionDigits:0}) }
+  function pct(n){ return (n*100).toFixed(1)+'%' }
+
+  // ---- get input value ----
+  function getIn(cls, row, col){
+    const el = document.querySelector('.'+cls+'[data-row="'+row+'"][data-col="'+col+'"]');
+    return el ? parseFloat(el.value)||0 : 0;
+  }
+
+  // ---- revenue totals ----
+  const revRows = ['dealer','dtc','member','overseas_dtc','overseas_platform'];
+  const revTotals = [0,0,0,0];
+
+  function calcRevenue(){
+    for(let c=0;c<4;c++){
+      let sum=0;
+      revRows.forEach(r=>{ sum+=getIn('rev',r,c); });
+      revTotals[c]=sum;
+      document.getElementById('rev-total-'+c).textContent = fmt(sum)+' 万';
+    }
+    // growth
+    for(let c=1;c<4;c++){
+      if(revTotals[c-1]>0){
+        const g = (revTotals[c]-revTotals[c-1])/revTotals[c-1];
+        document.getElementById('rev-growth-'+c).textContent = (g>=0?'+':'')+pct(g);
+      } else {
+        document.getElementById('rev-growth-'+c).textContent = '—';
+      }
+    }
+    calcProfit();
+  }
+
+  // ---- profit model ----
+  function calcProfit(){
+    for(let c=0;c<4;c++){
+      const rev = revTotals[c];
+      document.getElementById('p-rev-'+c).textContent = fmt(rev)+' 万';
+
+      const gmRate = getIn('profit-in','gm',c)/100;
+      const gp = rev * gmRate;
+      document.getElementById('p-gp-'+c).textContent = fmt(gp)+' 万';
+
+      const mktRate = getIn('profit-in','mkt',c)/100;
+      const mktCost = rev * mktRate;
+      const rd = getIn('profit-in','rd',c);
+      const hr = getIn('profit-in','hr',c);
+      const ops = getIn('profit-in','ops',c);
+      const cross = getIn('profit-in','cross',c);
+
+      const opProfit = gp - mktCost - rd - hr - ops - cross;
+      document.getElementById('p-op-'+c).textContent = fmt(opProfit)+' 万';
+
+      const nm = rev>0 ? opProfit/rev : 0;
+      document.getElementById('p-nm-'+c).textContent = pct(nm);
+      document.getElementById('p-nm-'+c).style.color = nm>=0 ? 'var(--green)' : '#f87171';
+    }
+  }
+
+  // ---- bind events ----
+  document.querySelectorAll('.rev').forEach(el=>{
+    el.addEventListener('input', calcRevenue);
+  });
+  document.querySelectorAll('.profit-in').forEach(el=>{
+    el.addEventListener('input', calcProfit);
+  });
+
+  // initial calc
+  calcRevenue();
+})();
+</script>
+</body>
+</html>

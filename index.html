@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>她概念 She Concept — 品牌战略研究中心</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060a14;--nav:#0a0e1a;--card:#0f172a;--border:rgba(255,255,255,.06);--pink:#f472b6;--purple:#818cf8;--green:#34d399;--text:#e2e8f0;--muted:#94a3b8}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* Top Bar */
+.topbar{display:flex;align-items:center;height:52px;padding:0 24px;background:var(--nav);border-bottom:1px solid var(--border);flex-shrink:0;gap:8px;position:relative;z-index:10}
+.brand{font-size:1rem;font-weight:700;background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:24px;white-space:nowrap;letter-spacing:.5px}
+
+/* Tabs */
+.tabs{display:flex;gap:2px;flex:1;overflow-x:auto}
+.tab{padding:0 20px;height:52px;display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;user-select:none}
+.tab:hover{color:var(--text);background:rgba(255,255,255,.02)}
+.tab.active{color:var(--pink);border-bottom-color:var(--pink);background:rgba(244,114,182,.04)}
+.tab .icon{font-size:1.1rem}
+.tab .badge{font-size:.65rem;padding:1px 6px;border-radius:4px;background:rgba(244,114,182,.12);color:var(--pink);font-weight:600}
+
+/* Port info */
+.port-info{font-size:.75rem;color:var(--muted);margin-left:auto;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.port-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Content */
+.content{flex:1;position:relative;overflow:hidden}
+.page{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s}
+.page.active{opacity:1;pointer-events:auto}
+.page iframe{width:100%;height:100%;border:none}
+
+/* Responsive */
+@media(max-width:768px){
+  .brand{font-size:.85rem;margin-right:12px}
+  .tab{padding:0 12px;font-size:.78rem}
+  .tab .badge,.port-info{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">她概念 She Concept</div>
+  <div class="tabs">
+    <div class="tab active" data-page="overview">
+      <span class="icon">🏠</span>
+      <span>战略门户</span>
+      <span class="badge">总览</span>
+    </div>
+    <div class="tab" data-page="ppt">
+      <span class="icon">📊</span>
+      <span>演示 PPT</span>
+      <span class="badge">15页</span>
+    </div>
+    <div class="tab" data-page="finance">
+      <span class="icon">📈</span>
+      <span>财务模型</span>
+      <span class="badge">可编辑</span>
+    </div>
+    <div class="tab" data-page="charts">
+      <span class="icon">📉</span>
+      <span>可视化报告</span>
+      <span class="badge">11图表</span>
+    </div>
+  </div>
+  <div class="port-info">
+    <span class="port-dot"></span>
+    she-concept
+  </div>
+</div>
+
+<div class="content">
+  <div class="page active" id="page-overview">
+    <iframe src="portal.html" loading="eager"></iframe>
+  </div>
+  <div class="page" id="page-ppt">
+    <iframe src="slides.html" loading="lazy"></iframe>
+  </div>
+  <div class="page" id="page-finance">
+    <iframe src="finance.html" loading="lazy"></iframe>
+  </div>
+  <div class="page" id="page-charts">
+    <iframe src="charts.html" loading="lazy"></iframe>
+  </div>
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const pages = document.querySelectorAll('.page');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.page;
+
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    pages.forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + target).classList.add('active');
+
+    // Focus iframe for keyboard events (PPT needs this)
+    const iframe = document.getElementById('page-' + target).querySelector('iframe');
+    if (iframe) setTimeout(() => iframe.focus(), 100);
+  });
+});
+
+// Keyboard shortcut: 1-4 switch tabs
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const num = parseInt(e.key);
+  if (num >= 1 && num <= 4) {
+    tabs[num - 1].click();
+  }
+});
+</script>
+</body>
+</html>
